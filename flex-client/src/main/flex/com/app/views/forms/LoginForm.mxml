@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   title.create="Create new login"
+			   title.update="Update existing login"
+			   close="model.closeWindow(this)">
+	
+	<fx:Script>
+		<![CDATA[
+			import app.dto.Role;
+			
+			import com.app.models.forms.LoginFormPresentationModel;
+			
+			[Bindable]
+			[Inject]
+			public var model:LoginFormPresentationModel;
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="default"/>
+		<s:State name="create"/>
+		<s:State name="update"/>
+	</s:states>
+	
+	<s:Form>
+		<s:FormHeading label.create="Give me the new login details:"
+					   label.update="Modify the login details"/>
+		<s:FormItem label="Username">
+			<s:TextInput text="@{model.loginModel.login.username}" />
+		</s:FormItem>
+		<s:FormItem label="Password">
+			<s:TextInput text="@{model.loginModel.login.password}" />
+		</s:FormItem>
+		<s:FormItem label="Status">
+			<s:TextInput text="@{model.loginModel.login.status}" />
+		</s:FormItem>
+		<s:FormItem label="Role">
+			<s:ComboBox		id="loginForm_combo_roles"
+							dataProvider="{model.roles}"
+							labelField="description"
+							prompt="Choose..."
+							selectedItem="@{model.selectedRole}" />
+		</s:FormItem>
+	</s:Form>
+	
+	<s:controlBarContent>
+		<s:Spacer width="100%" />
+		<s:Button label.create="Add new login"
+				  click.create="model.createLogin()"
+				  enabled.create="{!model.loginModel.isLoginCreating}"
+				  label.update="Update login"
+				  click.update="model.createLoginWithRole()"/>
+	</s:controlBarContent>
+	
+</s:TitleWindow>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LocaleMap  xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			xmlns="http://l10n.babelfx.org/"  
+			enableLog="true"
+			localeChanging="onUpdateAlert();">
+	
+	<fx:Metadata>
+		[ResourceBundle("application")]
+		[ResourceBundle("loginView")]
+		[ResourceBundle("customersView")]
+		[ResourceBundle("resources")]
+		[ResourceBundle("languageBar")]
+	</fx:Metadata>
+					
+	<fx:Script>
+		<![CDATA[
+			import com.app.views.grids.CustomerGrid;
+			import com.app.views.SecurityView;
+			import com.app.views.MainView;
+			
+			import l10n.views.LanguageBar;
+			
+			import mx.controls.Alert;
+			import mx.resources.ResourceManager;
+						
+			/**
+			 * Special method needed because injection does not work on static functions or 
+			 * static variables.
+			 * e.g. 
+			 * 
+			 * class Alert { 
+			 * 	static public function set yesLabel(val:String):void { ... }
+			 * } 
+			 * 
+			 * We must manually inject to such targets. Listening for localeChanged allows
+			 * use to do this easily.
+			 */
+			private function onUpdateAlert():void {
+				Alert.yesLabel = ResourceManager.getInstance().getString("resources","Alert.Yes");
+				Alert.noLabel  = ResourceManager.getInstance().getString("resources","Alert.No");
+				Alert.okLabel  = ResourceManager.getInstance().getString("resources","Alert.Ok");
+			} 
+		]]>
+	</fx:Script>
+							
+	<!-- 
+		The command factory instance below allows the l10nInjection engine to load external resource bundles from
+	     a custom deploy directory 'assets/locales/' name encoded by locale code
+	     e.g.  en_US.swf, zh_CN.swf, etc.
+	
+	<commandFactory>
+		 <factory:ClassFactory generator="{ExternalLocaleCommand}">
+			 <factory:properties>
+				 <mx:Object externalPath="pod_\{0\}.swf""/>
+			 </factory:properties>
+		 </factory:ClassFactory>
+	</commandFactory>
+	-->
+
+	<ResourceInjector bundleName="application" target="{App}" >
+	</ResourceInjector>
+	
+	<ResourceInjector bundleName="loginView" target="{SecurityView}" >
+		<ResourceSetter property="loginView_formItem_username.label" 			key="loginView_formItem_username.label" />
+		<ResourceSetter property="loginView_formItem_password.label" 			key="loginView_formItem_password.label" />
+		<ResourceSetter property="loginView_button_login.label"					key="loginView_button_login.label" />
+		<ResourceSetter property="loginView_button_logout.label" 				key="loginView_button_logout.label" />
+	</ResourceInjector>
+	
+	<ResourceInjector bundleName="customersView" target="{MainView}" >
+		<ResourceSetter property="customersView.title" 							key="customersView.title" />
+	</ResourceInjector>
+	
+	<ResourceInjector bundleName="customersView" target="{CustomerGrid}" >
+		<ResourceSetter property="customersView_label_loading.text" 			key="customersView_label_loading.text" />
+		<ResourceSetter property="customersView_key.headerText" 				key="customersView_key.headerText" />
+		<ResourceSetter property="customersView_firstname.headerText" 			key="customersView_firstname.headerText" />
+		<ResourceSetter property="customersView_lastname.headerText" 			key="customersView_lastname.headerText" />
+		<ResourceSetter property="customersView_city.headerText" 				key="customersView_city.headerText" />
+		<ResourceSetter property="customersView_postal.headerText" 				key="customersView_postal.headerText" />
+		<ResourceSetter property="customersView_phone.headerText" 				key="customersView_phone.headerText" />
+		<ResourceSetter property="customersView_street.headerText" 				key="customersView_street.headerText" />
+	</ResourceInjector>
+	
+	<ResourceInjector  bundleName="languageBar" target="{LanguageBar}" >
+		<ResourceSetter property="lblBarHelp.text" 								key="lblBarHelp.text" parameters="{['target.selectedLocale']}" />
+		<ResourceSetter property="flags[0].toolTip" 							key="flag.toolTip.hu_HU" />
+		<ResourceSetter property="flags[1].toolTip" 							key="flag.toolTip.en_US" />
+	</ResourceInjector>
+	
+</LocaleMap>

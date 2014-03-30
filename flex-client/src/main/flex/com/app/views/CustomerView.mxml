@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:grids="com.app.views.grids.*"
+		 xmlns:forms="com.app.views.forms.*"
+		 title="Manage Customers">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.app.constants.Constants;
+			import com.app.models.presentations.CustomerViewPresentationModel;
+			
+			[Bindable]
+			[Inject]
+			public var model:CustomerViewPresentationModel;
+			
+			[Bindable]
+			[Inject(source="customerModel.isCustomersLoading", bind="true")]
+			public var isCustomersLoading:Boolean;
+			
+		]]>
+	</fx:Script>
+	
+	<!-- Customer loading -->
+	<s:Label	id="customerView_label_loading"
+				text="Loading..."
+				visible="{isCustomersLoading}" />
+	
+	<!-- Customer Grid -->
+	<grids:CustomerGrid	id="customerGrid"
+						visible="{!isCustomersLoading}" />
+	
+	<!-- Customer control bar -->
+	<s:controlBarContent>
+		<s:Spacer width="100%" />
+		
+		<s:Button	id="customerView_button_demo"
+					label="Create demo customer" 
+				  	enabled="{!isCustomersLoading}"
+				  	click="model.createDemoCustomer()" />
+		
+		<s:Button	id="customerView_button_create"
+					label="Create new customer"
+				  	enabled="{!isCustomersLoading}"
+				  	click="model.showCustomerForm(this, Constants.STATE_CREATE)"/>
+		
+		<s:Button	id="customerView_button_update"
+					label="Update customer"
+				  	enabled="{!isCustomersLoading}"
+				  	click="model.showCustomerForm(this, Constants.STATE_UPDATE)"/>
+		
+	</s:controlBarContent>
+	
+</s:Panel>

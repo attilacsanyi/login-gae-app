@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:views="com.app.views.*"
+			   xmlns:configuration="com.app.configuration.*"
+			   minWidth="955" minHeight="600"
+			   currentState="{state}"
+			   creationComplete="creationComplete()">
+	
+	<fx:Declarations>
+		<configuration:AppSwiz/>
+	</fx:Declarations>
+	
+	<s:states>
+		<s:State name="default"/>
+		<s:State name="loggedIn"/>
+		<s:State name="loggedOut"/>
+	</s:states>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.app.models.AppModel;
+			import com.hdi.animation.MoveThis;
+			
+			import mx.events.FlexEvent;
+			
+			[Bindable]
+			[Inject("appModel.currentState", bind="true", twoWay="true")]
+			public var state:String;
+			
+			[Bindable]
+			[Inject]
+			public var model:AppModel;
+						
+			protected function creationComplete():void
+			{
+				MoveThis.ignoreDupes = true;
+				
+				// Fade in the languagebar with delay
+				MoveThis.startTween(languageBar, {alpha:1}, 30, {delay:30});
+				
+				// Move the login form from the right and Fade in
+				MoveThis.startTween(loginView, {alpha:1}, 50);
+			}
+			
+		]]>
+	</fx:Script>
+
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="center" verticalAlign="middle" />
+	</s:layout>
+	
+	<s:controlBarContent>
+		<views:SecurityView id="loginView" alpha="0"/>
+		<s:Spacer width="100%" />
+		<l10n:LanguageBar id="languageBar" xmlns:l10n="l10n.views.*"/>
+	</s:controlBarContent>
+	
+	<views:MainView includeIn="loggedIn" enabled="{model.isLoggingOut}"/>
+	
+</s:Application>

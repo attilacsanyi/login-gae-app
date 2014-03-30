@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>app</groupId>
+	<artifactId>atka-gaeflex</artifactId>
+	<packaging>pom</packaging>
+	<version>v1.0</version>
+	<name>Spring Flex GAE Integration Sample Application</name>
+
+	<developers>
+		<developer>
+			<name>Attila Csanyi</name>
+			<email>cs_ati@yahoo.com</email>
+			<!-- <url>http:...</url> -->
+			<!-- <organization></organization> -->
+			<!-- <organizationUrl></organizationUrl> -->
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<properties>
+		<flex.version>4.5.0.19786</flex.version><!-- 3.5.0.12683 ok:4.5.0.19786 bug:4.5.0.20967 -->
+		<flex.playerGlobal>10-3.3.0.4852</flex.playerGlobal>
+		<flex.license>4396-0238-2291-7139-5309</flex.license>
+		<flexmojos.version>3.8</flexmojos.version><!-- 3.5.0 3.8 4.0-beta-7 -->
+		<web.context.root>atka-gaeflex</web.context.root>
+		<spring.version>3.0.0.RELEASE</spring.version>
+		<appengine.version>1.5.3</appengine.version><!-- 1.3.0 1.5.1 1.5.2 -->
+		<flex.app.name>app</flex.app.name>
+	</properties>
+
+	<modules>
+		<!-- Build order -->
+		<module>model-java</module>
+		<module>model-as</module>
+		<module>flex-client</module>
+		<module>server</module>
+	</modules>
+
+	<build>
+		<defaultGoal>package</defaultGoal>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.sonatype.flexmojos</groupId>
+					<artifactId>flexmojos-maven-plugin</artifactId>
+					<version>${flexmojos.version}</version>
+					<extensions>true</extensions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-reactor-plugin</artifactId>
+				<version>1.0</version>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+
+<!-- 		<repository> -->
+<!-- 			<id>MyRepo</id> -->
+<!-- 			<url>file://c:/Documents and Settings/Attila_Csanyi/.m2/repository</url> -->
+<!-- 		</repository> -->
+
+		<repository>
+			<id>java.net.m2</id>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
+
+		<repository>
+			<id>repository.jboss.org</id>
+			<url>http://repository.jboss.org/maven2</url>
+		</repository>
+
+		<repository>
+			<id>flex-mojos-repository</id>
+			<url>http://repository.sonatype.org/content/groups/public</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+		<repository>
+			<id>flex-mojos-repository2</id>
+			<url>http://repository.sonatype.org/content/groups/flexgroup/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+		<repository>
+			<id>ObjectWEB</id>
+			<url>http://maven.ow2.org/maven2/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+		<repository>
+			<id>epseelon-repository</id>
+			<url>http://m2repo.epseelon.org/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+		<repository>
+			<id>DataNucleus_Repos</id>
+			<name>DataNucleus Repository</name>
+			<url>http://www.datanucleus.org/downloads/maven</url>
+		</repository>
+
+		<repository>
+			<id>DataNucleus_Repos2</id>
+			<name>DataNucleus Repository</name>
+			<url>http://www.datanucleus.org/downloads/maven2</url>
+		</repository>
+
+		<repository>
+			<id>www.mvnsearch.org</id>
+			<url>http://www.mvnsearch.org/maven2/</url>
+		</repository>
+
+		<!-- uncomment if necessary -->
+		<repository>
+			<id>berlin-incubator maven repository</id>
+			<url>http://berlin-incubator.googlecode.com/svn/maven</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>flex-mojos-repository</id>
+			<url>http://repository.sonatype.org/content/groups/flexgroup</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>datanucleus.org.m2.plugin</id>
+			<url>http://www.datanucleus.org/downloads/maven2</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.adobe.flex.framework</groupId>
+				<artifactId>flex-framework</artifactId>
+				<version>${flex.version}</version>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

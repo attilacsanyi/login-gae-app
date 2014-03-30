@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<swiz:Swiz	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			xmlns:s="library://ns.adobe.com/flex/spark" 
+			xmlns:mx="library://ns.adobe.com/flex/mx"
+			xmlns:swiz="http://swiz.swizframework.org"
+			xmlns:config="com.app.configuration.*">
+	
+	<!-- Beans definition -->
+	<swiz:beanProviders>
+		<config:AppModelBeans />
+		<config:AppControllerBeans />
+		<config:AppServiceBeans />
+		<!--<config:AppMockServiceBeans />-->
+	</swiz:beanProviders>
+		
+	<!-- Logging -->
+	<swiz:loggingTargets>
+		<swiz:SwizTraceTarget id="myTraceTarget"
+							  level="{SwizLogEventLevel.ERROR}"
+							  filters="com.app.*"/>
+		</swiz:loggingTargets>
+	
+	<!-- Config -->
+	<swiz:config>
+		<swiz:SwizConfig
+			strict="true"
+			viewPackages="com.app.views.*, l10n.views.*"
+			eventPackages="com.app.events.*, mx.events.*"
+			defaultFaultHandler="{handleUnhandledFaults}"/>
+	</swiz:config>
+	
+	<fx:Declarations>
+		<!-- Localization -->
+		<l10n:LocalizationMap xmlns:l10n="l10n.map.*"/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			
+			import org.swizframework.utils.logging.SwizLogEventLevel;
+			private function handleUnhandledFaults(event:FaultEvent):void
+			{
+				var message : String = event.fault.faultDetail; 
+				var code    : String = event.fault.faultCode;
+				Alert.show( message + ".\nError code: " + code, "SWIZ Unexpected Error" );
+			}
+		]]>
+	</fx:Script>
+	
+</swiz:Swiz>

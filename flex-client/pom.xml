@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>app</groupId>
+		<artifactId>atka-gaeflex</artifactId>
+		<version>v1.0</version>
+	</parent>
+	<artifactId>flex-client</artifactId>
+	<packaging>swf</packaging>
+	<name>[flex-client] Flex Client</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>flex-framework</artifactId>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>model-as</artifactId>
+			<version>${project.version}</version>
+			<type>swc</type>
+		</dependency>
+		<dependency>
+			<groupId>org.babelfx</groupId>
+			<artifactId>babelfx</artifactId>
+			<version>2.0</version>
+			<type>swc</type>
+		</dependency>
+		<dependency>
+			<groupId>org.swizframework</groupId>
+			<artifactId>swiz</artifactId>
+			<version>1.2.0</version>
+			<type>swc</type>
+		</dependency>
+	</dependencies>
+
+
+	<!-- Usage: http://docs.flex-mojos.info/ -->
+	<build>
+		<finalName>${flex.app.name}</finalName>
+		<sourceDirectory>src/main/flex</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.flexmojos</groupId>
+				<artifactId>flexmojos-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<ignoreVersionIssues>false</ignoreVersionIssues>
+					<services>${basedir}/src/main/config/services-config.xml</services>
+					<contextRoot>/${web.context.root}</contextRoot>
+					<resourceBundlePath>${basedir}/src/main/flex/l10n/locale/{locale}</resourceBundlePath>
+					<compiledLocales>
+						<locale>en_US</locale>
+						<locale>hu_HU</locale>
+					</compiledLocales>
+					<defaultLocale>hu_HU</defaultLocale>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.adobe.flex</groupId>
+						<artifactId>compiler</artifactId>
+						<version>${flex.version}</version>
+						<type>pom</type>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+</project>

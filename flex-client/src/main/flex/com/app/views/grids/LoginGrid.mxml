@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:DataGrid xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 dataProvider="{model.logins}"
+		 width="600" height="300">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.app.models.grids.LoginGridPresentationModel;
+			
+			[Bindable]
+			[Inject]
+			public var model:LoginGridPresentationModel;
+			
+		]]>
+	</fx:Script>
+
+	<s:columns>
+		<s:ArrayList>
+			<s:GridColumn id="loginsView_key" headerText="Key" dataField="key" visible="false"/>
+			<s:GridColumn id="loginsView_username" headerText="Username" dataField="username"/>
+			<s:GridColumn id="loginsView_password" headerText="Password" dataField="password"/>
+			<s:GridColumn id="loginsView_status" headerText="Status" dataField="status"/>
+			<s:GridColumn id="loginsView_roles" headerText="Roles" dataField="roles"/>
+		</s:ArrayList>
+	</s:columns>
+
+</s:DataGrid>

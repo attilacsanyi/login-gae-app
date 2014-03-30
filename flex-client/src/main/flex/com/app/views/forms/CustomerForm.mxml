@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 title.create="Create new customer"
+		 title.update="Update existing customer"
+		 close="model.closeWindow(this)">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.app.models.forms.CustomerFormPresentationModel;
+			
+			[Bindable]
+			[Inject]
+			public var model:CustomerFormPresentationModel;
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="default"/>
+		<s:State name="create"/>
+		<s:State name="update"/>
+	</s:states>
+	
+	<s:Form>
+		<s:FormHeading label.create="Give me the new customer details:"
+					   label.update="Modify the customer details"/>
+		<s:FormItem label="Firstname">
+			<s:TextInput text="@{model.customerModel.customer.firstname}" />
+		</s:FormItem>
+		<s:FormItem label="Lastname">
+			<s:TextInput text="@{model.customerModel.customer.lastname}" />
+		</s:FormItem>
+		<s:FormItem label="City">
+			<s:TextInput text="@{model.customerModel.customer.city}" />
+		</s:FormItem>
+		<s:FormItem label="Phone">
+			<s:TextInput text="@{model.customerModel.customer.phone}" />
+		</s:FormItem>
+		<s:FormItem label="Postal">
+			<s:TextInput text="@{model.customerModel.customer.postal}" />
+		</s:FormItem>
+		<s:FormItem label="Street">
+			<s:TextInput text="@{model.customerModel.customer.street}" />
+		</s:FormItem>
+	</s:Form>
+	
+	<s:controlBarContent>
+		<s:Spacer width="100%" />
+		<s:Button label.create="Add new customer"
+				  click.create="model.createCustomer()"
+				  label.update="Update customer"
+				  click.update="model.createCustomer()"/>
+	</s:controlBarContent>
+		
+</s:TitleWindow>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:grids="com.app.views.grids.*"
+		 xmlns:forms="com.app.views.forms.*"
+		 title="Manage Roles">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.app.constants.Constants;
+			import com.app.models.presentations.RoleViewPresentationModel;
+			
+			
+			[Bindable]
+			[Inject]
+			public var model:RoleViewPresentationModel;
+			
+		]]>
+	</fx:Script>
+	
+	<!-- Role loading -->
+	<s:Label	id="roleView_label_loading"
+				text="Loading..."
+				visible="{model.roleModel.isRolesLoading}" />
+	
+	<!-- Role Grid -->
+	<grids:RoleGrid id="roleGrid"
+					visible="{!model.roleModel.isRolesLoading}" />
+	
+	<!-- Role control bar -->
+	<s:controlBarContent>
+		<s:Spacer width="100%" />
+		
+		<s:Button	id="rolesView_button_demo"
+					label="Create demo role" 
+					enabled="{!model.roleModel.isRolesLoading}"
+					click="model.createDemoRole()" />
+		
+		<s:Button	id="rolesView_button_create"
+					label="Create new role"
+					enabled="{!model.roleModel.isRolesLoading}"
+					click="model.showRoleForm(this, Constants.STATE_CREATE)"/>
+		
+		<s:Button	id="rolesView_button_update"
+					label="Update role"
+					enabled="{!model.roleModel.isRolesLoading}"
+					click="model.showRoleForm(this, Constants.STATE_UPDATE)"/>
+		
+	</s:controlBarContent>
+	
+</s:Panel>

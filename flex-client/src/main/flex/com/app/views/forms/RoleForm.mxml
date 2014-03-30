@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   title.create="Create new role"
+			   title.update="Update existing role"
+			   close="model.closeWindow(this)">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.app.models.forms.RoleFormPresentationModel;
+			
+			[Bindable]
+			[Inject]
+			public var model:RoleFormPresentationModel;
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="default"/>
+		<s:State name="create"/>
+		<s:State name="update"/>
+	</s:states>
+	
+	<s:Form>
+		<s:FormHeading label.create="Give me the new role details:"
+					   label.update="Modify the role details"/>
+		<s:FormItem label="Name">
+			<s:TextInput text="@{model.roleModel.role.name}" />
+		</s:FormItem>
+		<s:FormItem label="Description">
+			<s:TextInput text="@{model.roleModel.role.description}" />
+		</s:FormItem>
+	</s:Form>
+	
+	<s:controlBarContent>
+		<s:Spacer width="100%" />
+		<s:Button label.create="Add new role"
+				  click.create="model.createRole()"
+				  label.update="Update role"
+				  click.update="model.createRole()"/>
+	</s:controlBarContent>
+	
+</s:TitleWindow>

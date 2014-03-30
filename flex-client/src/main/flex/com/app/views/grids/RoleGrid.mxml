@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:DataGrid xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 dataProvider="{model.roles}"
+		 width="600" height="300">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.app.models.grids.RoleGridPresentationModel;
+			
+			[Bindable]
+			[Inject]
+			public var model:RoleGridPresentationModel;
+			
+		]]>
+	</fx:Script>
+	
+	<s:columns>
+		<s:ArrayList>
+			<s:GridColumn id="rolesView_key" headerText="Key" dataField="key" visible="false"/>
+			<s:GridColumn id="rolesView_name" headerText="Name" dataField="name"/>
+			<s:GridColumn id="rolesView_description" headerText="Description" dataField="description"/>
+		</s:ArrayList>
+	</s:columns>
+
+</s:DataGrid>

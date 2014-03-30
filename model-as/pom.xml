@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>app</groupId>
+		<artifactId>atka-gaeflex</artifactId>
+		<version>v1.0</version>
+	</parent>
+	<artifactId>model-as</artifactId>
+	<packaging>swc</packaging>
+
+	<name>[model-as   ] AS Classes For The Flex Client</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>model-java</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>flex-framework</artifactId>
+			<version>${flex.version}</version>
+			<type>pom</type>
+			<exclusions>
+				<exclusion>
+					<groupId>com.adobe.flex.framework</groupId>
+					<artifactId>playerglobal</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>playerglobal</artifactId>
+			<version>${flex.playerGlobal}</version>
+			<type>swc</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.graniteds</groupId>
+			<artifactId>granite-core-swc</artifactId>
+			<version>1.2.0</version>
+			<type>swc</type>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<sourceDirectory>src/main/flex</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>
+                    ${basedir}/target/generated-resources
+                </directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.sonatype.flexmojos</groupId>
+					<artifactId>flexmojos-maven-plugin</artifactId>
+					<version>${flexmojos.version}</version>
+					<extensions>true</extensions>
+					<configuration>
+						<licenses>
+							<flexbuilder3>
+								${flex.license}
+                            </flexbuilder3>
+						</licenses>
+						<locales>
+							<param>en_US</param>
+						</locales>
+						<debug>true</debug>
+						<contextRoot>${web.context.root}</contextRoot>
+						<targetPlayer>10.0.0</targetPlayer>
+					</configuration>
+					<dependencies>
+						<!--
+							<dependency> <groupId>com.adobe.flex</groupId>
+							<artifactId>license</artifactId>
+							<version>${flex.version}</version> </dependency>
+						-->
+						<dependency>
+							<groupId>com.adobe.flex</groupId>
+							<artifactId>compiler</artifactId>
+							<version>${flex.version}</version>
+							<type>pom</type>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<!-- Flex (SWC and SWF) compilation -->
+				<groupId>org.sonatype.flexmojos</groupId>
+				<artifactId>flexmojos-maven-plugin</artifactId>
+				<version>${flexmojos.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>optimize</goal>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<includeJavaClasses>
+								<includeJavaClass>app.dto.*</includeJavaClass>
+							</includeJavaClasses>
+                            <beanTemplate>
+                                <template>${basedir}/src/main/template/beanBase.gsp</template>
+                                <template>${basedir}/src/main/template/bean.gsp</template>
+                            </beanTemplate>
+                            <entityTemplate>
+                                <template>${basedir}/src/main/template/beanBase.gsp</template>
+                                <template>${basedir}/src/main/template/bean.gsp</template>
+                            </entityTemplate>
+                            <interfaceTemplate>
+                                <template>${basedir}/src/main/template/serviceBase.gsp</template>
+                                <template>${basedir}/src/main/template/service.gsp</template>
+                            </interfaceTemplate>
+                            <enumTemplate>
+                                <template>${basedir}/src/main/template/enum.gsp</template>
+                            </enumTemplate>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

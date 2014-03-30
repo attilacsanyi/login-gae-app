@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<swiz:BeanProvider
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:swiz="http://swiz.swizframework.org"
+	xmlns:models="com.app.models.*" xmlns:forms="com.app.views.forms.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.app.models.forms.CustomerFormPresentationModel;
+			import com.app.models.forms.LoginFormPresentationModel;
+			import com.app.models.forms.RoleFormPresentationModel;
+			import com.app.models.grids.CustomerGridPresentationModel;
+			import com.app.models.grids.LoginGridPresentationModel;
+			import com.app.models.grids.RoleGridPresentationModel;
+			import com.app.models.presentations.CustomerViewPresentationModel;
+			import com.app.models.presentations.LoginViewPresentationModel;
+			import com.app.models.presentations.MainViewPresentationModel;
+			import com.app.models.presentations.RoleViewPresentationModel;
+			import com.app.models.presentations.SecurityViewPresentationModel;
+		]]>
+	</fx:Script>
+		
+	<!-- Model beans -->
+	
+	<models:AppModel id="appModel" />
+	
+	<swiz:Prototype type="{ MainViewPresentationModel }" />
+	
+	<models:SecurityModel id="securityModel" />
+	<swiz:Prototype type="{ SecurityViewPresentationModel }" />
+	
+	<models:LoginModel id="loginModel" />
+	<swiz:Prototype type="{ LoginViewPresentationModel }" />
+	<swiz:Prototype type="{ LoginGridPresentationModel }" />
+	<swiz:Prototype type="{ LoginFormPresentationModel }" />
+	
+	<models:RoleModel id="roleModel" />
+	<swiz:Prototype type="{ RoleViewPresentationModel }" />
+	<swiz:Prototype type="{ RoleGridPresentationModel }" />
+	<swiz:Prototype type="{ RoleFormPresentationModel }" />
+	
+	<models:CustomerModel id="customerModel" />
+	<swiz:Prototype type="{ CustomerViewPresentationModel }" />
+	<swiz:Prototype type="{ CustomerGridPresentationModel }" />
+	<swiz:Prototype type="{ CustomerFormPresentationModel }" />
+	
+</swiz:BeanProvider>

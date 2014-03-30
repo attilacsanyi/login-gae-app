@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:grids="com.app.views.grids.*"
+		 xmlns:forms="com.app.views.forms.*"
+		 title="Manage Logins">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.app.constants.Constants;
+			import com.app.models.presentations.LoginViewPresentationModel;
+			
+			[Bindable]
+			[Inject]
+			public var model:LoginViewPresentationModel;
+			
+			[Bindable]
+			[Inject(source="appModel.isLoginAndRoleLoaded", bind="true")]
+			public var isLoginAndRoleLoaded:Boolean;
+
+			
+		]]>
+	</fx:Script>
+	
+	<!-- Login loading -->
+	<s:Label	id="loginView_label_loading"
+			 	text="Loading..."
+				visible="{model.loginModel.isLoginsLoading}" />
+	
+	<!-- Login Grid -->
+	<grids:LoginGrid	id="loginGrid"
+						visible="{!model.loginModel.isLoginsLoading}" />
+	
+	<!-- Login control bar -->
+	<s:controlBarContent>
+		<s:Spacer width="100%" />
+		
+		<s:Button	id="loginView_button_demo"
+					label="Create demo login"
+				  	enabled="{!model.loginModel.isLoginsLoading}"
+				  	click="model.createDemoLogin()" />
+		
+		<s:Button	id="loginView_button_create"
+					label="Create new login"
+				  	enabled="{isLoginAndRoleLoaded}"
+				  	click="model.showLoginForm(this, Constants.STATE_CREATE)" />
+		
+		<s:Button	id="loginView_button_update"
+					label="Update login"
+				  	enabled="{isLoginAndRoleLoaded}"
+				  	click="model.showLoginForm(this, Constants.STATE_UPDATE)" />
+		
+	</s:controlBarContent>
+	
+</s:Panel>
