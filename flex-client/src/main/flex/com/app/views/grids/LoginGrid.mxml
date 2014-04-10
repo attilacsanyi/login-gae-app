@@ -3,7 +3,9 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 dataProvider="{model.logins}"
-		 width="600" height="300">
+		 click="{model.setSelectedLogin(this)}"
+		 width="600" height="300"
+		 alternatingRowColors="[#eeeeFF, #FFFFFF]">
 	
 	<fx:Script>
 		<![CDATA[
@@ -18,11 +20,11 @@
 
 	<s:columns>
 		<s:ArrayList>
-			<s:GridColumn id="loginsView_key" headerText="Key" dataField="key" visible="false"/>
-			<s:GridColumn id="loginsView_username" headerText="Username" dataField="username"/>
-			<s:GridColumn id="loginsView_password" headerText="Password" dataField="password"/>
-			<s:GridColumn id="loginsView_status" headerText="Status" dataField="status"/>
-			<s:GridColumn id="loginsView_roles" headerText="Roles" dataField="roles"/>
+			<s:GridColumn id="loginGrid_gridcolumn_username" headerText="Username" dataField="username"/>
+			<s:GridColumn id="loginGrid_gridcolumn_password" headerText="Password" dataField="password"/>
+			<s:GridColumn id="loginGrid_gridcolumn_status" headerText="Status" dataField="status"/>
+			<s:GridColumn id="loginGrid_gridcolumn_roles" headerText="Roles" dataField="roles"
+						  itemRenderer="com.app.views.grids.renderers.LoginRolesGridItemRenderer"/>
 		</s:ArrayList>
 	</s:columns>
 

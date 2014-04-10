@@ -1,9 +1,7 @@
 package com.app.models.presentations
 {
-	import com.app.events.CustomerEvent;
-	import com.app.events.RoleEvent;
 	import com.app.models.RoleModel;
-	import com.app.views.forms.CustomerForm;
+	import com.app.views.RoleView;
 	import com.app.views.forms.RoleForm;
 	
 	import flash.display.DisplayObject;
@@ -24,7 +22,7 @@ package com.app.models.presentations
 		private var _swiz : ISwiz;
 		
 		public function RoleViewPresentationModel(){/*For avoid warning*/}
-		
+				
 		// *********************************************************
 		// Getter/Setter 
 		// *********************************************************
@@ -39,15 +37,6 @@ package com.app.models.presentations
 		}
 		
 		// *********************************************************
-		// Public Methods 
-		// *********************************************************
-		
-		public function createDemoRole():void
-		{
-			dispatcher.dispatchEvent(new RoleEvent( RoleEvent.ROLES_DEMO));
-		}
-		
-		// *********************************************************
 		// EventHandlers 
 		// *********************************************************
 		
@@ -56,6 +45,7 @@ package com.app.models.presentations
 			// Create a modal RoleForm window.
 			var roleFormWindow:RoleForm = PopUpManager.createPopUp(obj, RoleForm, true) as RoleForm;
 			_swiz.registerWindow( roleFormWindow );
+			roleFormWindow.roleView = obj as RoleView;
 			roleFormWindow.currentState = state;
 			PopUpManager.centerPopUp(roleFormWindow);
 		}

@@ -2,56 +2,143 @@
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
-			   title.create="Create new login"
-			   title.update="Update existing login"
-			   close="model.closeWindow(this)">
+			   title.create="loginForm_titleWindow.title.create"
+			   title.delete="loginForm_titleWindow.title.delete"
+			   title.update="loginForm_titleWindow.title.update"
+			   title.delall="loginForm_titleWindow.title.delall"
+			   close="model.closeWindow(this)"
+			   mouseDownOutside="model.closeWindow(this)"
+			   creationComplete.create="focusManager.setFocus(loginForm_textInput_create)"
+			   creationComplete.update="focusManager.setFocus(loginForm_textInput_update)">
 	
 	<fx:Script>
 		<![CDATA[
 			import app.dto.Role;
 			
+			import com.app.constants.Constants;
 			import com.app.models.forms.LoginFormPresentationModel;
+			import com.app.views.LoginView;
+			
+			import mx.collections.ArrayCollection;
 			
 			[Bindable]
+			public var loginView:LoginView;
+			
 			[Inject]
+			[Bindable]
 			public var model:LoginFormPresentationModel;
 		]]>
 	</fx:Script>
 	
-	<s:states>
-		<s:State name="default"/>
-		<s:State name="create"/>
-		<s:State name="update"/>
-	</s:states>
+	<fx:Declarations>
+		<s:ArrayList id="loginStatusArrayList">
+			<fx:Object id="statusActive" label="{Constants.LOGIN_ACTIVE}"/>
+			<fx:Object id="statusDisabled" label="{Constants.LOGIN_DISABLED}"/>
+			<fx:Object id="statusExpired" label="{Constants.LOGIN_EXPIRED}"/>
+			<fx:Object id="statusLocked" label="{Constants.LOGIN_LOCKED}"/>
+			<fx:Object id="statusPassword" label="{Constants.LOGIN_PASSWORD}"/>
+		</s:ArrayList>
+	</fx:Declarations>
 	
-	<s:Form>
-		<s:FormHeading label.create="Give me the new login details:"
-					   label.update="Modify the login details"/>
-		<s:FormItem label="Username">
-			<s:TextInput text="@{model.loginModel.login.username}" />
+	<s:states>
+		<s:State name="create"/>
+		<s:State name="delete"/>
+		<s:State name="update"/>
+		<s:State name="delall"/>
+	</s:states>
+										  
+	<s:Form defaultButton="{loginForm_button_crud}" >
+		<s:FormHeading id="loginForm_formHeading"
+					   label.create="loginForm_formHeading.label.create"
+					   label.delete="loginForm_formHeading.label.delete"
+					   label.update="loginForm_formHeading.label.update"
+					   label.delall="loginForm_formHeading.label.delall"/>
+		
+		<s:FormItem id="loginForm_formItem_loginUsername"
+					label="loginForm_formItem_loginUsername.label" excludeFrom="delall">
+			<s:TextInput id="loginForm_textInput_create"
+						 text="@{model.loginModel.createdLogin.username}"
+						 enabled.create="true"
+						 includeIn="create"/>
+			<s:TextInput text="@{model.loginModel.selectedLogin.username}"
+						 enabled.delete="false"
+						 includeIn="delete"/>
+			<s:TextInput id="loginForm_textInput_update"
+						 text="@{model.loginModel.updatedLogin.username}"
+						 enabled.update="true"
+						 includeIn="update"/>
 		</s:FormItem>
-		<s:FormItem label="Password">
-			<s:TextInput text="@{model.loginModel.login.password}" />
+		
+		<s:FormItem	id="loginForm_formItem_loginPassword"
+					label="loginForm_formItem_loginPassword.label" excludeFrom="delall">
+			<s:TextInput text="@{model.loginModel.createdLogin.password}"
+						 enabled.create="true"
+						 includeIn="create"/>
+			<s:TextInput text="@{model.loginModel.selectedLogin.password}"
+						 enabled.delete="false"
+						 includeIn="delete"/>
+			<s:TextInput text="@{model.loginModel.updatedLogin.password}"
+						 enabled.update="true"
+						 includeIn="update"/>
 		</s:FormItem>
-		<s:FormItem label="Status">
-			<s:TextInput text="@{model.loginModel.login.status}" />
+	
+		<s:FormItem id="loginForm_formItem_loginStatus"
+					label="loginForm_formItem_loginStatus.label" excludeFrom="delall">			
+			<s:ComboBox id="loginForm_comboBox_status"
+						prompt="loginForm_comboBox_status.prompt"
+						dataProvider="{loginStatusArrayList}"
+						enabled.create="true"
+						enabled.update="true"
+						enabled.delete="false"
+						change.create="{model.loginModel.createdLogin.status = loginForm_comboBox_status.selectedItem.label}"
+						change.update="{model.loginModel.updatedLogin.status = loginForm_comboBox_status.selectedItem.label}"
+						selectedItem.create="@{model.loginModel.createdLogin.status}"
+						selectedItem.delete="{model.loginModel.selectedLogin.status}"
+						selectedItem.update="@{model.loginModel.updatedLogin.status}"/>
 		</s:FormItem>
-		<s:FormItem label="Role">
-			<s:ComboBox		id="loginForm_combo_roles"
+		
+		<s:FormItem id="loginForm_formItem_loginRoles"
+					label="loginForm_formItem_loginRoles.label" excludeFrom="delall">
+			<s:ComboBox		id="loginForm_comboBox_roles"
 							dataProvider="{model.roles}"
 							labelField="description"
-							prompt="Choose..."
-							selectedItem="@{model.selectedRole}" />
+							prompt="loginForm_comboBox_role.prompt"
+							enabled.create="true"
+							enabled.delete="false"
+							enabled.update="true"
+							change.create="{model.loginModel.createdLogin.roles.addItemAt(loginForm_comboBox_roles.selectedItem as Role, 0)}"
+							change.update="{model.loginModel.updatedLogin.roles.addItemAt(loginForm_comboBox_roles.selectedItem as Role, 0)}"
+							selectedItem.delete="{model.loginModel.selectedLogin.roles.getItemAt(0) as Role}"
+							selectedItem.update="@{model.loginModel.updatedLogin.roles.getItemAt(0) as Role}"/>
 		</s:FormItem>
 	</s:Form>
 	
 	<s:controlBarContent>
+		
+		<s:Button id="loginForm_button_crud"
+				  label.create="loginForm_button_crud.label.create"
+				  click.create="model.createLogin();
+				  loginView.loginView_button_delete.visible = false;
+				  loginView.loginView_button_update.visible = false;"
+				  label.delete="loginForm_button_crud.label.delete"
+				  click.delete="model.deleteLogin();
+				  loginView.loginView_button_delete.visible = false;
+				  loginView.loginView_button_update.visible = false;
+				  model.closeWindow(this)"
+				  label.update="loginForm_button_crud.label.update"
+				  click.update="model.updateLogin();
+				  loginView.loginView_button_delete.visible = false;
+				  loginView.loginView_button_update.visible = false;
+				  model.closeWindow(this)"
+				  label.delall="loginForm_button_crud.label.delall"
+				  click.delall="model.deleteAllLogins();
+				  loginView.loginView_button_delete.visible = false;
+				  loginView.loginView_button_update.visible = false;
+				  model.closeWindow(this);" />
 		<s:Spacer width="100%" />
-		<s:Button label.create="Add new login"
-				  click.create="model.createLogin()"
-				  enabled.create="{!model.loginModel.isLoginCreating}"
-				  label.update="Update login"
-				  click.update="model.createLoginWithRole()"/>
+		<s:Button id="loginForm_button_cancel"
+				  label="loginForm_button_cancel.label"
+				  click="model.closeWindow(this)"/>
 	</s:controlBarContent>
 	
 </s:TitleWindow>

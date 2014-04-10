@@ -1,37 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ******************************************************************************* -->
+<!-- MAIN APPLICATION POM														 	 -->
+<!-- ******************************************************************************* -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>app</groupId>
 	<artifactId>atka-gaeflex</artifactId>
-	<packaging>pom</packaging>
 	<version>v1.0</version>
+	<packaging>pom</packaging>
 	<name>Spring Flex GAE Integration Sample Application</name>
+	<description>Main application</description>
 
 	<developers>
 		<developer>
 			<name>Attila Csanyi</name>
 			<email>cs_ati@yahoo.com</email>
-			<!-- <url>http:...</url> -->
-			<!-- <organization></organization> -->
-			<!-- <organizationUrl></organizationUrl> -->
 			<roles>
 				<role>Java Developer</role>
 			</roles>
 		</developer>
 	</developers>
 
+	<!-- *************************************************************************** -->
+	<!-- PROPERTIES																	 -->
+	<!-- *************************************************************************** -->
 	<properties>
-		<flex.version>4.5.0.19786</flex.version><!-- 3.5.0.12683 ok:4.5.0.19786 bug:4.5.0.20967 -->
-		<flex.playerGlobal>10-3.3.0.4852</flex.playerGlobal>
-		<flex.license>4396-0238-2291-7139-5309</flex.license>
-		<flexmojos.version>3.8</flexmojos.version><!-- 3.5.0 3.8 4.0-beta-7 -->
-		<web.context.root>atka-gaeflex</web.context.root>
-		<spring.version>3.0.0.RELEASE</spring.version>
-		<appengine.version>1.5.3</appengine.version><!-- 1.3.0 1.5.1 1.5.2 -->
-		<flex.app.name>app</flex.app.name>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- War file and web context root name -->
+		<!-- If you change this please update also the webapp/index.html -->
+		<application.name>application</application.name>
+	
+		<!-- Modules version dependencies -->
+		<model-java.version>v1.0</model-java.version>
+		<server.version>v1.0</server.version>
+		<model-as.version>v1.0</model-as.version>
+		<flex-client.version>v1.0</flex-client.version>
+		
+		<!-- Plugins -->
+		<flexmojos-maven-plugin.version>3.8</flexmojos-maven-plugin.version>
+						
+		<!-- Flex SDK: 4.5.0.19786 (ok), 4.5.0.20967 4.5.1.21328, 4.6.0.23201 (ok) (manually in repo) -->
+		<!-- SDK: http://opensource.adobe.com/wiki/display/flexsdk/Downloads -->
+		<flex.version>4.5.0.20967</flex.version>
+		
 	</properties>
 
+	<!-- *************************************************************************** -->
+	<!-- MODULES																	 -->
+	<!-- *************************************************************************** -->
 	<modules>
 		<!-- Build order -->
 		<module>model-java</module>
@@ -48,14 +67,17 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<configuration>
+						<fork>true</fork>
 						<source>1.6</source>
 						<target>1.6</target>
 					</configuration>
 				</plugin>
 				<plugin>
+					<!-- Flexmojos Maven Plugin 3.8 -->
+					<!-- Usage: http://repository.sonatype.org/content/sites/flexmojos-site/3.8/plugin-info.html -->
 					<groupId>org.sonatype.flexmojos</groupId>
 					<artifactId>flexmojos-maven-plugin</artifactId>
-					<version>${flexmojos.version}</version>
+					<version>${flexmojos-maven-plugin.version}</version>
 					<extensions>true</extensions>
 				</plugin>
 			</plugins>
@@ -66,29 +88,65 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-reactor-plugin</artifactId>
 				<version>1.0</version>
-			</plugin>
+			</plugin>			
 		</plugins>
+
 	</build>
 
+	<!-- *************************************************************************** -->
+	<!-- REPOSITORIES																 -->
+	<!-- *************************************************************************** -->
 	<repositories>
-
-<!-- 		<repository> -->
-<!-- 			<id>MyRepo</id> -->
-<!-- 			<url>file://c:/Documents and Settings/Attila_Csanyi/.m2/repository</url> -->
-<!-- 		</repository> -->
-
+	
+		<!-- Flex SDK repo's -->
+		<!--<repository>
+			<id>MyRepo</id>
+			<url>file://c:/Documents and Settings/Attila_Csanyi/.m2/repository</url>
+			<url>file://c:/Users/Atka/.m2/repository</url>
+		</repository>-->
+	
+		<!-- Maven repo's -->
 		<repository>
-			<id>java.net.m2</id>
+			<id>Nexus</id>
+			<name>Nexus repo: [sonatype org]</name>
+			<url>https://repository.sonatype.org</url>
+		</repository>
+		<repository>
+			<id>maven2-repo-2</id>
+			<name>Maven2 repo: [search.maven.org]</name>
+			<url>http://search.maven.org</url>
+		</repository>
+		<repository>
+			<id>maven2-repo-1</id>
+			<name>Maven2 repo: [java.net]</name>
 			<url>http://download.java.net/maven/2</url>
 		</repository>
-
 		<repository>
-			<id>repository.jboss.org</id>
-			<url>http://repository.jboss.org/maven2</url>
+			<id>maven2-repo-3</id>
+			<name>Maven2 repo: [mvnsearch.org]</name>
+			<url>http://www.mvnsearch.org/maven2/</url>
 		</repository>
-
+		
 		<repository>
-			<id>flex-mojos-repository</id>
+            <id>spring-maven-release</id>
+            <name>Spring Maven Release Repository</name>
+            <url>http://maven.springframework.org/release</url>
+        </repository>
+        <repository>
+            <id>spring-maven-milestone</id>
+            <name>Spring Maven Milestone Repository</name>
+            <url>http://maven.springframework.org/milestone</url>
+        </repository>
+		<repository>
+            <id>spring-roo-repository</id>
+            <name>Spring Roo Repository</name>
+            <url>http://spring-roo-repository.springsource.org/release</url>
+        </repository>
+
+		<!-- Flex mojos repo's -->
+		<repository>
+			<id>flex-mojos-repo-1</id>
+			<name>Flex mojos repo: [public]</name>
 			<url>http://repository.sonatype.org/content/groups/public</url>
 			<releases>
 				<enabled>true</enabled>
@@ -97,9 +155,9 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-
 		<repository>
-			<id>flex-mojos-repository2</id>
+			<id>flex-mojos-repo-2</id>
+			<name>Flex mojos repo: [flexgroup]</name>
 			<url>http://repository.sonatype.org/content/groups/flexgroup/</url>
 			<releases>
 				<enabled>true</enabled>
@@ -109,81 +167,61 @@
 			</snapshots>
 		</repository>
 
-		<repository>
-			<id>ObjectWEB</id>
-			<url>http://maven.ow2.org/maven2/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-
-		<repository>
-			<id>epseelon-repository</id>
-			<url>http://m2repo.epseelon.org/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-
-		<repository>
-			<id>DataNucleus_Repos</id>
-			<name>DataNucleus Repository</name>
+		<!-- Datanucleus repo's -->
+		<!--<repository>
+			<id>datanuclues-repo-1</id>
+			<name>DataNucleus repo: [maven]</name>
 			<url>http://www.datanucleus.org/downloads/maven</url>
 		</repository>
-
 		<repository>
-			<id>DataNucleus_Repos2</id>
-			<name>DataNucleus Repository</name>
+			<id>datanuclues-repo-2</id>
+			<name>DataNucleus repo: [maven2]</name>
 			<url>http://www.datanucleus.org/downloads/maven2</url>
-		</repository>
-
-		<repository>
-			<id>www.mvnsearch.org</id>
-			<url>http://www.mvnsearch.org/maven2/</url>
-		</repository>
-
-		<!-- uncomment if necessary -->
-		<repository>
-			<id>berlin-incubator maven repository</id>
-			<url>http://berlin-incubator.googlecode.com/svn/maven</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-
+		</repository>-->
+		
+		<!-- Google Appengine repo's -->
+		<!--<repository>
+            <id>maven-gae-plugin-repo</id>
+            <name>Maven Gae plugin repo: [googlecode]</name>
+            <url>http://maven-gae-plugin.googlecode.com/svn/repository</url>
+        </repository>-->
+		
 	</repositories>
 
 	<pluginRepositories>
+		<!-- Flex mojos repo's -->
 		<pluginRepository>
 			<id>flex-mojos-repository</id>
 			<url>http://repository.sonatype.org/content/groups/flexgroup</url>
-			<releases>
+			<!-- In order to use manually installed flex 4.6.23201 sdk -->
+			<!--<releases>
 				<enabled>true</enabled>
 			</releases>
 			<snapshots>
 				<enabled>false</enabled>
-			</snapshots>
+			</snapshots>-->
 		</pluginRepository>
-		<pluginRepository>
+		
+		<!-- Datanucleus repo's -->
+		<!--<pluginRepository>
 			<id>datanucleus.org.m2.plugin</id>
 			<url>http://www.datanucleus.org/downloads/maven2</url>
-		</pluginRepository>
+		</pluginRepository>-->
+		
+        <pluginRepository>
+            <id>spring-maven-release</id>
+            <name>Spring Maven Release Repository</name>
+            <url>http://maven.springframework.org/release</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-maven-milestone</id>
+            <name>Spring Maven Milestone Repository</name>
+            <url>http://maven.springframework.org/milestone</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-roo-repository</id>
+            <name>Spring Roo Repository</name>
+            <url>http://spring-roo-repository.springsource.org/release</url>
+        </pluginRepository>
 	</pluginRepositories>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.adobe.flex.framework</groupId>
-				<artifactId>flex-framework</artifactId>
-				<version>${flex.version}</version>
-				<type>pom</type>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 </project>

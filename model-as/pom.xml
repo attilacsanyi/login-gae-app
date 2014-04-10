@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ******************************************************************************* -->
+<!-- ACTIONSCRIPT MODEL POM -->
+<!-- ******************************************************************************* -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -9,86 +14,26 @@
 	</parent>
 	<artifactId>model-as</artifactId>
 	<packaging>swc</packaging>
-
 	<name>[model-as   ] AS Classes For The Flex Client</name>
+	<description>ActionScript Model</description>
 
-	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>model-java</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.adobe.flex.framework</groupId>
-			<artifactId>flex-framework</artifactId>
-			<version>${flex.version}</version>
-			<type>pom</type>
-			<exclusions>
-				<exclusion>
-					<groupId>com.adobe.flex.framework</groupId>
-					<artifactId>playerglobal</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>com.adobe.flex.framework</groupId>
-			<artifactId>playerglobal</artifactId>
-			<version>${flex.playerGlobal}</version>
-			<type>swc</type>
-		</dependency>
-
-		<dependency>
-			<groupId>org.graniteds</groupId>
-			<artifactId>granite-core-swc</artifactId>
-			<version>1.2.0</version>
-			<type>swc</type>
-		</dependency>
-
-	</dependencies>
+	<!-- *************************************************************************** -->
+	<!-- PROPERTIES -->
+	<!-- *************************************************************************** -->
+	<properties>
+		<web.context.root>${application.name}</web.context.root>
+		<java.classes.package>app.dto.*</java.classes.package>
+	</properties>
 
 	<build>
 		<sourceDirectory>src/main/flex</sourceDirectory>
-		<resources>
-			<resource>
-				<directory>${basedir}/src/main/resources</directory>
-			</resource>
-			<resource>
-				<directory>
-                    ${basedir}/target/generated-resources
-                </directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.sonatype.flexmojos</groupId>
 					<artifactId>flexmojos-maven-plugin</artifactId>
-					<version>${flexmojos.version}</version>
-					<extensions>true</extensions>
-					<configuration>
-						<licenses>
-							<flexbuilder3>
-								${flex.license}
-                            </flexbuilder3>
-						</licenses>
-						<locales>
-							<param>en_US</param>
-						</locales>
-						<debug>true</debug>
-						<contextRoot>${web.context.root}</contextRoot>
-						<targetPlayer>10.0.0</targetPlayer>
-					</configuration>
+					<version>${flexmojos-maven-plugin.version}</version>
 					<dependencies>
-						<!--
-							<dependency> <groupId>com.adobe.flex</groupId>
-							<artifactId>license</artifactId>
-							<version>${flex.version}</version> </dependency>
-						-->
 						<dependency>
 							<groupId>com.adobe.flex</groupId>
 							<artifactId>compiler</artifactId>
@@ -97,14 +42,48 @@
 						</dependency>
 					</dependencies>
 				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.sonatype.flexmojos
+										</groupId>
+										<artifactId>
+											flexmojos-maven-plugin
+										</artifactId>
+										<versionRange>
+											[3.8,)
+										</versionRange>
+										<goals>
+											<goal>test-compile</goal>
+											<goal>generate</goal>
+											<goal>compile-swc</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
-				<!-- Flex (SWC and SWF) compilation -->
+				<!-- Generate AS model from Java model classes -->
+				<!-- Usage: http://www.graniteds.org/confluence/display/DOC/3.+Gas3+Code+Generator -->
 				<groupId>org.sonatype.flexmojos</groupId>
 				<artifactId>flexmojos-maven-plugin</artifactId>
-				<version>${flexmojos.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -113,27 +92,47 @@
 						</goals>
 						<configuration>
 							<includeJavaClasses>
-								<includeJavaClass>app.dto.*</includeJavaClass>
+								<includeJavaClass>${java.classes.package}</includeJavaClass>
 							</includeJavaClasses>
-                            <beanTemplate>
-                                <template>${basedir}/src/main/template/beanBase.gsp</template>
-                                <template>${basedir}/src/main/template/bean.gsp</template>
-                            </beanTemplate>
-                            <entityTemplate>
-                                <template>${basedir}/src/main/template/beanBase.gsp</template>
-                                <template>${basedir}/src/main/template/bean.gsp</template>
-                            </entityTemplate>
-                            <interfaceTemplate>
-                                <template>${basedir}/src/main/template/serviceBase.gsp</template>
-                                <template>${basedir}/src/main/template/service.gsp</template>
-                            </interfaceTemplate>
-                            <enumTemplate>
-                                <template>${basedir}/src/main/template/enum.gsp</template>
-                            </enumTemplate>
+							<beanTemplate>
+								<template>${basedir}/src/main/template/beanBase.gsp</template>
+								<template>${basedir}/src/main/template/bean.gsp</template>
+							</beanTemplate>
+							<entityTemplate>
+								<template>${basedir}/src/main/template/beanBase.gsp</template>
+								<template>${basedir}/src/main/template/bean.gsp</template>
+							</entityTemplate>
+							<interfaceTemplate>
+								<template>${basedir}/src/main/template/serviceBase.gsp</template>
+								<template>${basedir}/src/main/template/service.gsp</template>
+							</interfaceTemplate>
+							<enumTemplate>
+								<template>${basedir}/src/main/template/enum.gsp</template>
+							</enumTemplate>
+							<!-- Directory where the *Base.as files will be generated -->
+							<baseOutputDirectory>${basedir}/src/main/flex</baseOutputDirectory>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
 	</build>
+
+	<!-- DEPENDENCIES -->
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>model-java</artifactId>
+			<version>${model-java.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>flex-framework</artifactId>
+			<version>${flex.version}</version>
+			<type>pom</type>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
 </project>

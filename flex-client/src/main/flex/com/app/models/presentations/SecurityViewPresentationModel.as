@@ -1,7 +1,5 @@
 package com.app.models.presentations
 {
-	import app.dto.Login;
-	
 	import com.app.events.SecurityEvent;
 	import com.app.models.SecurityModel;
 	
@@ -18,16 +16,22 @@ package com.app.models.presentations
 		[PostConstruct]
 		public function postConstruct():void
 		{	
-			dispatcher.dispatchEvent( new SecurityEvent( SecurityEvent.AUTHENTICATE_REQUESTED ));
+			authenticate();
 		}
 		
 		// *********************************************************
 		// Public Methods 
 		// *********************************************************
 
+		public function authenticate():void
+		{			
+			dispatcher.dispatchEvent( new SecurityEvent( SecurityEvent.AUTHENTICATE_REQUESTED ));
+			securityModel.isAuthenticationProgress = true;
+		}	
+		
 		public function login():void
 		{			
-			dispatcher.dispatchEvent(new SecurityEvent( SecurityEvent.LOGIN_REQUESTED, securityModel.login));
+			dispatcher.dispatchEvent(new SecurityEvent( SecurityEvent.LOGIN_REQUESTED/*, securityModel.login*/));
 			securityModel.isLoginProgress = true;
 		}
 		
@@ -35,7 +39,7 @@ package com.app.models.presentations
 		{
 			dispatcher.dispatchEvent( new SecurityEvent( SecurityEvent.LOGOUT_REQUESTED ));
 			securityModel.isLogoutProgress = true;
-		}		
+		}
 
 	}
 }

@@ -15,21 +15,17 @@
 			[Inject]
 			public var model:CustomerViewPresentationModel;
 			
-			[Bindable]
-			[Inject(source="customerModel.isCustomersLoading", bind="true")]
-			public var isCustomersLoading:Boolean;
-			
 		]]>
 	</fx:Script>
 	
 	<!-- Customer loading -->
 	<s:Label	id="customerView_label_loading"
 				text="Loading..."
-				visible="{isCustomersLoading}" />
+				visible="{model.customerModel.isCustomersLoading}" />
 	
 	<!-- Customer Grid -->
 	<grids:CustomerGrid	id="customerGrid"
-						visible="{!isCustomersLoading}" />
+						visible="{!model.customerModel.isCustomersLoading}" />
 	
 	<!-- Customer control bar -->
 	<s:controlBarContent>
@@ -37,17 +33,17 @@
 		
 		<s:Button	id="customerView_button_demo"
 					label="Create demo customer" 
-				  	enabled="{!isCustomersLoading}"
+				  	enabled="{!model.customerModel.isCustomersLoading}"
 				  	click="model.createDemoCustomer()" />
 		
 		<s:Button	id="customerView_button_create"
 					label="Create new customer"
-				  	enabled="{!isCustomersLoading}"
+				  	enabled="{!model.customerModel.isCustomersLoading}"
 				  	click="model.showCustomerForm(this, Constants.STATE_CREATE)"/>
 		
 		<s:Button	id="customerView_button_update"
 					label="Update customer"
-				  	enabled="{!isCustomersLoading}"
+				  	enabled="{!model.customerModel.isCustomersLoading}"
 				  	click="model.showCustomerForm(this, Constants.STATE_UPDATE)"/>
 		
 	</s:controlBarContent>

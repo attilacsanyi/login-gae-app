@@ -15,15 +15,17 @@
 		]]>
 	</fx:Script>
 		
-	<mx:Accordion>
-		<s:NavigatorContent label="Logins">
-			<views:LoginView id="loginView" />
+	<mx:Accordion selectedIndex="1">
+		<s:NavigatorContent id="mainView_navigatorContent_login" label="mainView_navigatorContent_login">
+			<views:LoginView />
 		</s:NavigatorContent>
-		<s:NavigatorContent label="Roles">
-			<views:RoleView id="roleView" />
+		
+		<s:NavigatorContent id="mainView_navigatorContent_role" label="mainView_navigatorContent_role.label">
+			<views:RoleView />
 		</s:NavigatorContent>
-		<s:NavigatorContent label="Customers">
-			<views:CustomerView id="customerView" />
+		
+		<s:NavigatorContent id="mainView_navigatorContent_customer" label="mainView_navigatorContent_customer.label">
+			<views:CustomerView />
 		</s:NavigatorContent>
 	</mx:Accordion>
 	

@@ -4,12 +4,15 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:grids="com.app.views.grids.*"
 		 xmlns:forms="com.app.views.forms.*"
-		 title="Manage Logins">
+		 title="loginView_panel.title">
 	
 	<fx:Script>
 		<![CDATA[
 			import com.app.constants.Constants;
 			import com.app.models.presentations.LoginViewPresentationModel;
+			import com.app.views.forms.LoginForm;
+			
+			import mx.managers.PopUpManager;
 			
 			[Bindable]
 			[Inject]
@@ -17,39 +20,47 @@
 			
 			[Bindable]
 			[Inject(source="appModel.isLoginAndRoleLoaded", bind="true")]
-			public var isLoginAndRoleLoaded:Boolean;
-
-			
+			public var isLoginAndRoleLoaded:Boolean;			
 		]]>
 	</fx:Script>
 	
 	<!-- Login loading -->
 	<s:Label	id="loginView_label_loading"
-			 	text="Loading..."
+				text="loginView_label_loading.text"
 				visible="{model.loginModel.isLoginsLoading}" />
 	
 	<!-- Login Grid -->
 	<grids:LoginGrid	id="loginGrid"
-						visible="{!model.loginModel.isLoginsLoading}" />
+						visible="{!model.loginModel.isLoginsLoading}"
+						selectionChange="loginView_button_delete.visible = true; loginView_button_update.visible = true" />
 	
 	<!-- Login control bar -->
 	<s:controlBarContent>
-		<s:Spacer width="100%" />
-		
-		<s:Button	id="loginView_button_demo"
-					label="Create demo login"
-				  	enabled="{!model.loginModel.isLoginsLoading}"
-				  	click="model.createDemoLogin()" />
 		
 		<s:Button	id="loginView_button_create"
-					label="Create new login"
-				  	enabled="{isLoginAndRoleLoaded}"
-				  	click="model.showLoginForm(this, Constants.STATE_CREATE)" />
+					label="loginView_button_create.label"
+					enabled="{!model.loginModel.isLoginsLoading}"
+					click="model.showLoginForm(this, Constants.STATE_CREATE)"/>
+		
+		<s:Spacer width="100%" />
+		
+		<s:Button	id="loginView_button_delete"
+					label="loginView_button_delete.label"
+					enabled="{!model.loginModel.isLoginsLoading}"
+					visible="false"
+					click="model.showLoginForm(this, Constants.STATE_DELETE)"/>
 		
 		<s:Button	id="loginView_button_update"
-					label="Update login"
-				  	enabled="{isLoginAndRoleLoaded}"
-				  	click="model.showLoginForm(this, Constants.STATE_UPDATE)" />
+					label="loginView_button_update.label"
+					enabled="{!model.loginModel.isLoginsLoading}"
+					visible="false"
+					click="model.showLoginForm(this, Constants.STATE_UPDATE)"/>
+		
+		<s:Button	id="loginView_button_delall"
+					label="loginView_button_delall.label"
+					enabled="{!model.loginModel.isLoginsLoading}"
+					visible="{loginGrid.dataProvider.length >= 2}"
+					click="model.showLoginForm(this, Constants.STATE_DELALL)"/>
 		
 	</s:controlBarContent>
 	

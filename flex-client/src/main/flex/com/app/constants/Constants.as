@@ -1,7 +1,14 @@
 package com.app.constants
 {
+	import mx.collections.ArrayCollection;
+
 	public final class Constants
 	{
+		
+		// Security errro messages
+		public static const ERROR_CODE_AUTHENTICATION:String		= "1001";
+		public static const ERROR_CODE_AUTHORIZATION:String			= "1002";
+		
         // Role constants
         public static const ROLE_ADMIN:String            		   	= "ROLE_ADMIN";
         public static const ROLE_USER:String             		   	= "ROLE_USER";
@@ -9,20 +16,19 @@ package com.app.constants
 		public static const ROLE_DEMO:String						= "ROLE_DEMO";
 		
 		// Login constants
-		public static const LOGIN_ACCOUNT_EXPIRED:String    		= "Account is expired";
-		public static const LOGIN_ACCOUNT_DISABLED:String    		= "Account is disabled";
-		public static const LOGIN_ACCOUNT_LOCKED:String     		= "Account is locked";
-		public static const LOGIN_ACCOUNT_PASSWORD_EXPIRED:String	= "Password is expired";
-		public static const LOGIN_ACCOUNT_IS_OK:String       	    = "";
+		public static const LOGIN_EXPIRED:String    				= "Expired";
+		public static const LOGIN_DISABLED:String    				= "Disabled";
+		public static const LOGIN_LOCKED:String     				= "Locked";
+		public static const LOGIN_PASSWORD:String					= "Password";
+		public static const LOGIN_ACTIVE:String						= "Active";
 
-		        
         // State constants
-		public static const STATE_LOGGEDIN:String					= "loggedIn";
-		public static const STATE_LOGGEDOUT:String					= "loggedOut";
-		public static const STATE_DEFAULT:String					= "default";
+		public static const STATE_LOGIN:String						= "login";
+		public static const STATE_LOGOUT:String						= "logout";
 		public static const STATE_CREATE:String						= "create";
 		public static const STATE_UPDATE:String						= "update";
 		public static const STATE_DELETE:String						= "delete";
+		public static const STATE_DELALL:String						= "delall";
 		
 		// Mock constants
 		public static const MOCK_RESPONSE_TIME:Number				= 1000;

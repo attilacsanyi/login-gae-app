@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ******************************************************************************* -->
+<!-- SERVER APPLICATION POM -->
+<!-- ******************************************************************************* -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -10,15 +15,53 @@
 	<artifactId>server</artifactId>
 	<packaging>war</packaging>
 	<name>[server     ] Spring BlazeDS Web Application</name>
+	<description>Application Server</description>
+
+	<!-- *************************************************************************** -->
+	<!-- PROPERTIES -->
+	<!-- *************************************************************************** -->
+	<properties>
+		<maven-war.name>${application.name}</maven-war.name>
+
+		<!-- Plugins -->
+		<maven-war-plugin.version>2.0.2</maven-war-plugin.version>
+<!-- 		<maven-datanucleus-plugin.version>1.1.4</maven-datanucleus-plugin.version> -->
+		<maven-antrun-plugin.version>1.6</maven-antrun-plugin.version>
+<!-- 		<maven-gae-plugin.version>0.9.2</maven-gae-plugin.version> -->
+
+		<!-- Spring -->
+		<spring.version>3.1.1.RELEASE</spring.version>
+		<spring-security.version>3.1.0.RELEASE</spring-security.version>
+		<!-- http://static.springsource.org/spring-flex/docs/1.5.2.RELEASE/reference/html/ -->
+		<spring-flex-core.version>1.5.2.RELEASE</spring-flex-core.version>
+
+		<!-- Logging -->
+		<log4j.version>1.2.15</log4j.version>
+		<commons-logging.version>1.1.1</commons-logging.version>
+
+		<!-- Appengine -->
+		<geronimo-jpa_3.0_spec.version>1.1.1</geronimo-jpa_3.0_spec.version>
+		<jta.version>1.1</jta.version>
+<!-- 		<appengine.version>1.6.3</appengine.version> -->
+		<roo.version>1.2.1.RELEASE</roo.version>
+<!-- 		<appengine.directory>W:\work\environment\appengine\appengine-java-sdk-${appengine.version}</appengine.directory> -->
+
+		<!-- Datanucleus -->
+<!-- 		<datanucleus-appengine.version>1.0.10</datanucleus-appengine.version> -->
+<!-- 		<datanucleus-core.version>1.1.6</datanucleus-core.version> -->
+<!-- 		<datanucleus-jpa.version>1.1.5</datanucleus-jpa.version> -->
+
+	</properties>
 
 	<build>
-		<finalName>${web.context.root}</finalName>
+		<finalName>${maven-war.name}</finalName>
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<configuration>
+						<fork>true</fork>
 						<source>1.6</source>
 						<target>1.6</target>
 					</configuration>
@@ -26,255 +69,403 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
-					<version>2.0.2</version>
+					<version>${maven-war-plugin.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
-            <plugin>
-                <groupId>org.datanucleus</groupId>
-                <artifactId>maven-datanucleus-plugin</artifactId>
-                <version>1.1.4</version>
-                <configuration>
-					<fork>false</fork>
-                    <verbose>true</verbose>
-                    <api>JPA</api>
-                    <enhancerName>ASM</enhancerName>
-                    <mappingIncludes>**/domains/*.class</mappingIncludes>
-                    <persistenceUnitName>persistenceUnit</persistenceUnitName>
-                    <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>             
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>enhance</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.datanucleus</groupId> -->
+<!-- 				<artifactId>maven-datanucleus-plugin</artifactId> -->
+<!-- 				<version>${maven-datanucleus-plugin.version}</version> -->
+<!-- 				<configuration> -->
+<!-- 					<fork>false</fork> -->
+<!-- 					<verbose>true</verbose> -->
+<!-- 					<api>JPA</api> -->
+<!-- 					<enhancerName>ASM</enhancerName> -->
+<!-- 					<mappingIncludes>**/domains/*.class</mappingIncludes> -->
+<!-- 					<persistenceUnitName>gaePersistenceUnit</persistenceUnitName> -->
+<!-- 					<log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration> -->
+<!-- 				</configuration> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<phase>process-classes</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>enhance</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.sonatype.flexmojos</groupId> -->
+<!-- 				<artifactId>flexmojos-maven-plugin</artifactId> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<goals> -->
+<!-- 							<goal>copy-flex-resources</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+
 			<plugin>
-				<groupId>org.sonatype.flexmojos</groupId>
-				<artifactId>flexmojos-maven-plugin</artifactId>
-				<version>${flexmojos.version}</version>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven-antrun-plugin.version}</version>
 				<executions>
 					<execution>
+						<phase>install</phase>
+						<configuration>
+							<target>
+
+								<!-- Copy Patched Blazeds jar -->
+								<copy todir="${basedir}/target/${application.name}/WEB-INF/lib"
+									flatten="true"> <!-- Copy into one directory, not create sub directory for jars as in the 
+										original folders -->
+									<fileset dir="${basedir}/lib">
+										<include name="**/*.jar" />
+									</fileset>
+								</copy>
+
+							</target>
+						</configuration>
 						<goals>
-							<goal>copy-flex-resources</goal>
+							<goal>run</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
+
+			<!-- gae:deploy -->
+			<!-- http://www.kindleit.net/maven_gae_plugin/maven-gae-plugin/deploy-mojo.html -->
+<!-- 			<plugin> -->
+<!-- 				<groupId>net.kindleit</groupId> -->
+<!-- 				<artifactId>maven-gae-plugin</artifactId> -->
+<!-- 				<version>${maven-gae-plugin.version}</version> -->
+<!-- 				<dependencies> -->
+<!-- 					<dependency> -->
+<!-- 						<groupId>net.kindleit</groupId> -->
+<!-- 						<artifactId>gae-runtime</artifactId> -->
+<!-- 						<version>${appengine.version}</version> -->
+<!-- 						<type>pom</type> -->
+<!-- 					</dependency> -->
+<!-- 				</dependencies> -->
+<!-- 				<configuration> -->
+<!-- 					<sdkDir>${appengine.directory}</sdkDir> -->
+<!-- 					<appDir>target/${application.name}</appDir> -->
+<!-- 					<passIn>true</passIn> -->
+<!-- 				</configuration> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<goals> -->
+<!-- 							<goal>deploy</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+
 		</plugins>
 	</build>
 
+	<!-- DEPENDENCIES -->
 	<dependencies>
+	
+	    <!-- ROO dependencies -->
+        <dependency>
+            <groupId>org.springframework.roo</groupId>
+            <artifactId>org.springframework.roo.annotations</artifactId>
+            <version>${roo.version}</version>
+            <scope>provided</scope>
+        </dependency>
+	
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>flex-client</artifactId>
-			<version>${project.version}</version>
+			<version>${flex-client.version}</version>
 			<type>swf</type>
 		</dependency>
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>model-java</artifactId>
-			<version>${project.version}</version>
+			<version>${model-java.version}</version>
 		</dependency>
 
+		<!-- Spring security -->
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>3.0.1.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-			<version>3.0.1.RELEASE</version>
-		</dependency>
-		<!--
-			These are needed to override the default versions brought in by the
-			spring-flex pom
-		-->
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring-security.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring-security.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+
+
+		<!-- These are needed to override the default versions brought in by the 
+			spring-flex pom -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>taglibs</groupId>
-			<artifactId>standard</artifactId>
-			<version>1.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-core</artifactId>
-			<version>1.0.3.RELEASE</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework</groupId>
-					<artifactId>spring-context</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.flex</groupId>
-			<artifactId>spring-flex</artifactId>
-			<version>1.0.2.RELEASE</version>
+			<artifactId>spring-flex-core</artifactId>
+			<version>${spring-flex-core.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jms</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aop</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${spring.version}</version>
-        </dependency> 
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+
+		<!-- Appengine -->
+		<!-- Usage http://www.kindleit.net/maven_gae_plugin/examples/index.html -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.google.appengine</groupId> -->
+<!-- 			<artifactId>appengine-api-1.0-sdk</artifactId> -->
+<!-- 			<version>${appengine.version}</version> -->
+<!-- 		</dependency> -->
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.google.appengine</groupId> -->
+<!-- 			<artifactId>appengine-api-labs</artifactId> -->
+<!-- 			<version>${appengine.version}</version> -->
+<!-- 		</dependency> -->
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.google.appengine</groupId> -->
+<!-- 			<artifactId>appengine-jsr107cache</artifactId> -->
+<!-- 			<version>${appengine.version}</version> -->
+<!-- 		</dependency> -->
+
 		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>1.6.3</version>
+			<groupId>net.sf.jsr107cache</groupId>
+			<artifactId>jsr107cache</artifactId>
+			<version>1.1</version>
 		</dependency>
+
 		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-core</artifactId>
-			<version>5.1.0</version>
+			<groupId>javax.jdo</groupId>
+			<artifactId>jdo2-api</artifactId>
+			<version>2.3-ec</version>
 			<exclusions>
+				<!-- exclude the legacy javax.transaction:transaction-api and replace 
+					it with javax.transaction:jta (it appears to be the same thing) -->
 				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.camel</groupId>
-					<artifactId>camel-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>geronimo-jms_1.1_spec</artifactId>
-					<groupId>org.apache.geronimo.specs</groupId>
+					<groupId>javax.transaction</groupId>
+					<artifactId>transaction-api</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
 
-        <!-- Google App Engine and datanucleus dependencies -->
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-1.0-sdk</artifactId>
-            <version>${appengine.version}</version>
+		<!-- Provides the jpa 1.0 -->
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-jpa_3.0_spec</artifactId>
+			<version>${geronimo-jpa_3.0_spec.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+			<version>${jta.version}</version>
+		</dependency>
+
+		<!-- Datanucleus -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.google.appengine.orm</groupId> -->
+<!-- 			<artifactId>datanucleus-appengine</artifactId> -->
+<!-- 			<version>${datanucleus-appengine.version}</version> -->
+<!-- 		</dependency> -->
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.datanucleus</groupId> -->
+<!-- 			<artifactId>datanucleus-core</artifactId> -->
+<!-- 			<version>${datanucleus-core.version}</version> -->
+<!-- 			<exclusions> -->
+<!-- 				<exclusion> -->
+<!-- 					<groupId>javax.transaction</groupId> -->
+<!-- 					<artifactId>transaction-api</artifactId> -->
+<!-- 				</exclusion> -->
+<!-- 			</exclusions> -->
+<!-- 		</dependency> -->
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.google.appengine</groupId> -->
+<!-- 			<artifactId>datanucleus-jpa</artifactId> -->
+<!-- 			<version>${datanucleus-jpa.version}</version> -->
+<!-- 			<scope>runtime</scope> -->
+<!-- 		</dependency> -->
+
+		<!-- log4j -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>mail</artifactId>
+					<groupId>javax.mail</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jmxtools</artifactId>
+					<groupId>com.sun.jdmk</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jms</artifactId>
+					<groupId>javax.jms</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jmxri</artifactId>
+					<groupId>com.sun.jmx</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>${commons-logging.version}</version>
+		</dependency>
+		<!-- ADDED -->
+		
+		        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
         </dependency>
-<!--         Not used in 1.5.1 only 1.3.0 -->
-<!--         <dependency> -->
-<!--             <groupId>com.google.appengine</groupId> -->
-<!--             <artifactId>appengine-api-1.0-labs</artifactId> -->
-<!--             <version>${appengine.version}</version> -->
-<!--         </dependency> -->
-        <dependency>
-            <groupId>com.google.appengine.orm</groupId>
-            <artifactId>datanucleus-appengine</artifactId>
-            <version>1.0.5</version>
+		
+		<dependency>
+		  <groupId>commons-dbcp</groupId>
+		  <artifactId>commons-dbcp</artifactId>
+		  <version>1.4</version>
+		   <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+		</dependency>
+		
+		<dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.18</version>
+            <classifier/>
         </dependency>
         <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-jpa</artifactId>
-           	<version>1.1.5</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>4.1.1.Final</version>
+            <classifier/>
         </dependency>
         <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-core</artifactId>
-           	<version>1.1.6</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>4.1.1.Final</version>
+            <classifier/>
             <exclusions>
                 <exclusion>
-                    <artifactId>transaction-api</artifactId>
-                    <groupId>javax.transaction</groupId>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>dom4j</groupId>
+                    <artifactId>dom4j</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
-        	<!-- provides the jpa 1.0 -->
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jpa_3.0_spec</artifactId> 
-            <version>1.1.1</version>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <version>1.0.1.Final</version>
+            <classifier/>
         </dependency>
         <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jta_1.1_spec</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <!-- log4j -->
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.15</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>4.2.0.Final</version>
+            <classifier/>
             <exclusions>
                 <exclusion>
-                    <artifactId>mail</artifactId>
-                    <groupId>javax.mail</groupId>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
                 </exclusion>
                 <exclusion>
-                    <artifactId>jmxtools</artifactId>
-                    <groupId>com.sun.jdmk</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jms</artifactId>
-                    <groupId>javax.jms</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jmxri</artifactId>
-                    <groupId>com.sun.jmx</groupId>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
         </dependency>
 	</dependencies>
-
 </project>

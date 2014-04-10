@@ -12,7 +12,7 @@
 		<config:AppServiceBeans />
 		<!--<config:AppMockServiceBeans />-->
 	</swiz:beanProviders>
-		
+	
 	<!-- Logging -->
 	<swiz:loggingTargets>
 		<swiz:SwizTraceTarget id="myTraceTarget"

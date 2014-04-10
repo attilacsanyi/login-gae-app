@@ -3,6 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 dataProvider="{model.roles}"
+		 click="{model.setSelectedRole(this)}"
 		 width="600" height="300">
 	
 	<fx:Script>
@@ -18,9 +19,12 @@
 	
 	<s:columns>
 		<s:ArrayList>
-			<s:GridColumn id="rolesView_key" headerText="Key" dataField="key" visible="false"/>
-			<s:GridColumn id="rolesView_name" headerText="Name" dataField="name"/>
-			<s:GridColumn id="rolesView_description" headerText="Description" dataField="description"/>
+			<s:GridColumn id="roleGrid_gridcolumn_name"
+						  headerText="roleGrid_gridcolumn_name.headerText"
+						  dataField="name"/>
+			<s:GridColumn id="roleGrid_gridcolumn_description"
+						  headerText="roleGrid_gridcolumn_description.headerText"
+						  dataField="description"/>
 		</s:ArrayList>
 	</s:columns>
 

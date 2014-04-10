@@ -13,10 +13,16 @@ package com.app.models
 		[Dispatcher] public var dispatcher:IEventDispatcher;	// Dispatcher
 		
 		private var _roles:IList;
-		private var _role:Role;
+		private var _createdRole:Role;	// Use when create a new role
+		private var _selectedRole:Role;	// Use when delete a role
+		private var _updatedRole:Role;	// Use when update a role
 		private var _isRolesLoading:Boolean;
 		
-		public function RoleModel(){}
+		public function RoleModel(){
+			if (_createdRole == null) { _createdRole = new Role;}
+			if (_selectedRole == null) { _selectedRole = new Role;}
+			if (_updatedRole == null) { _updatedRole = new Role;}
+		}
 		
 		// *********************************************************
 		// Getters/Setters 
@@ -45,15 +51,38 @@ package com.app.models
 		}
 
 		[Bindable]
-		public function get role():Role
+		public function get selectedRole():Role
 		{
-			return _role;
+			return _selectedRole;
 		}
 
-		public function set role(value:Role):void
+		public function set selectedRole(value:Role):void
 		{
-			_role = value;
+			_selectedRole = value;
 		}
+
+		[Bindable]
+		public function get createdRole():Role
+		{
+			return _createdRole;
+		}
+
+		public function set createdRole(value:Role):void
+		{
+			_createdRole = value;
+		}
+
+		[Bindable]
+		public function get updatedRole():Role
+		{
+			return _updatedRole;
+		}
+
+		public function set updatedRole(value:Role):void
+		{
+			_updatedRole = value;
+		}
+
 
 	}
 }

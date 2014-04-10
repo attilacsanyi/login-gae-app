@@ -3,9 +3,12 @@ package app.domains;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,12 +18,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import app.constants.Constants;
-
-import com.google.appengine.api.datastore.Key;
 
 /**
  * Class implementing a login entity.
@@ -28,338 +29,399 @@ import com.google.appengine.api.datastore.Key;
  * @author atka
  * @date 07.14.2011
  */
+@SuppressWarnings("serial")
 @Table(name = "login")
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "LoginEntity.findLoginByUsername", query = "SELECT l FROM LoginEntity l WHERE l.username=:username"),
 		@NamedQuery(name = "LoginEntity.loadAll", query = "SELECT l FROM LoginEntity l") })
-public class LoginEntity implements Serializable, UserDetails {
+public class LoginEntity implements Serializable, UserDetails
+{
 
+	private String			accountExpired;
+	private String			accountLocked;
+
+	/**
+	 * Indicates whether the user's account has expired. An expired account cannot be authenticated.
+	 * 
+	 * @return <code>true</code> if the user's account is valid (ie non-expired), <code>false</code>
+	 *         if no longer valid (ie expired)
+	 */
+	private boolean			accountNonExpired;
+
+	/**
+	 * Indicates whether the user is locked or unlocked. A locked user cannot be authenticated.
+	 * 
+	 * @return <code>true</code> if the user is not locked, <code>false</code> otherwise
+	 */
+	private boolean			accountNonLocked;
+	private String			credentialsExpired;
+
+	/**
+	 * Indicates whether the user's credentials (password) has expired. Expired credentials prevent
+	 * authentication.
+	 * 
+	 * @return <code>true</code> if the user's credentials are valid (ie non-expired),
+	 *         <code>false</code> if no longer valid (ie expired)
+	 */
+	private boolean			credentialsNonExpired;
+	private String			disabled;
+
+	/**
+	 * Indicates whether the user is enabled or disabled. A disabled user cannot be authenticated.
+	 * 
+	 * @return <code>true</code> if the user is enabled, <code>false</code> otherwise
+	 */
+	private boolean			enabled;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Key key;
+	// private Key key;
+	private Long			key;
 
-	private String username;
+	private String			password;
 
-	private String password;
+	/** Store only the role keys */
+	// private Collection<Key> roleKeys;
 
-	private String status;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<RoleEntity>	roles	= new HashSet<RoleEntity>();
+
+	@SuppressWarnings("unused")
+	private String			status;
+	private String			username;
 
 	/**
-	 * Unidirectional one-to-many association to {@link RoleEntity}.
-	 */
-	@OneToMany(cascade = CascadeType.ALL)
-	private Collection<RoleEntity> roles;
-
-	/**
-	 * Indicates whether the user's account has expired. An expired account
-	 * cannot be authenticated.
+	 * Add new role key to the roles list
 	 * 
-	 * @return <code>true</code> if the user's account is valid (ie
-	 *         non-expired), <code>false</code> if no longer valid (ie expired)
+	 * @param roleKey the key of the new role
 	 */
-	private boolean accountNonExpired;
-	private String accountExpired;
+	// public void addRoleKey(Key roleKey)
+	// {
+	// if (roleKeys == null)
+	// {
+	// roleKeys = new ArrayList<Key>();
+	// }
+	// if (!roleKeys.contains(roleKey))
+	// {
+	// roleKeys.add(roleKey);
+	// }
+	// }
+
+	/*
+	 * private boolean findRole(String role) { boolean founded = false; if (roles != null &&
+	 * !roles.isEmpty()) { for (RoleEntity actRole : roles) { if (actRole.getName().equals(role)) {
+	 * founded = true; break; } } } return founded; }
+	 */
+
+	private String getAccountExpired()
+	{
+		boolean nonExpired = isAccountNonExpired();
+		if (nonExpired)
+		{
+			setAccountExpired(Constants.LOGIN_EMPTY);
+		}
+		else
+		{
+			setAccountExpired(Constants.LOGIN_EXPIRED);
+		}
+
+		return accountExpired;
+	}
+
+	private String getAccountLocked()
+	{
+		boolean nonLocked = isAccountNonLocked();
+		if (nonLocked)
+		{
+			setAccountLocked(Constants.LOGIN_EMPTY);
+		}
+		else
+		{
+			setAccountLocked(Constants.LOGIN_LOCKED);
+		}
+
+		return accountLocked;
+	}
 
 	/**
-	 * Indicates whether the user is locked or unlocked. A locked user cannot be
-	 * authenticated.
-	 * 
-	 * @return <code>true</code> if the user is not locked, <code>false</code>
-	 *         otherwise
+	 * Authority contains the role keys
 	 */
-	private boolean accountNonLocked;
-	private String accountLocked;
-
-	/**
-	 * Indicates whether the user's credentials (password) has expired. Expired
-	 * credentials prevent authentication.
-	 * 
-	 * @return <code>true</code> if the user's credentials are valid (ie
-	 *         non-expired), <code>false</code> if no longer valid (ie expired)
-	 */
-	private boolean credentialsNonExpired;
-	private String credentialsExpired;
-
-	/**
-	 * Indicates whether the user is enabled or disabled. A disabled user cannot
-	 * be authenticated.
-	 * 
-	 * @return <code>true</code> if the user is enabled, <code>false</code>
-	 *         otherwise
-	 */
-	private boolean enabled;
-	private String disabled;
-
 	@Override
-	public Collection<GrantedAuthority> getAuthorities() {
+	public Collection<GrantedAuthority> getAuthorities()
+	{
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
-		if (roles != null && !roles.isEmpty()) {
-			for (RoleEntity role : roles) {
-				authorities.add(new GrantedAuthorityImpl(role.getName()));
+		// if (roleKeys != null && !roleKeys.isEmpty())
+		// {
+		// for (Key key : roleKeys)
+		// {
+		// authorities.add(new GrantedAuthorityImpl(KeyFactory.keyToString(key)));
+		// }
+		// }
+
+		if (roles != null && !roles.isEmpty())
+		{
+			for (RoleEntity role : roles)
+			{
+				authorities.add(new SimpleGrantedAuthority(role.getName()));
 			}
 		}
 
 		return authorities;
 	}
 
-	public boolean hasProperRole() {
-		return true || findRole(Constants.ROLE_ADMIN) || findRole(Constants.ROLE_USER);
-	}
-
-	private boolean findRole(String role) {
-		boolean founded = false;
-		if (roles != null && !roles.isEmpty()) {
-			for (RoleEntity actRole : roles) {
-				if (actRole.getName().equals(role)) {
-					founded = true;
-					break;
-				}
-			}
+	private String getCredentialsExpired()
+	{
+		boolean nonExpired = isCredentialsNonExpired();
+		if (nonExpired)
+		{
+			setCredentialsExpired(Constants.LOGIN_EMPTY);
+		}
+		else
+		{
+			setCredentialsExpired(Constants.LOGIN_PASSWORD);
 		}
 
-		return founded;
-	}
-
-	/**
-	 * Check weather the loginEntity has role or not
-	 */
-	public boolean hasRole() {
-		if (roles == null || roles.size() > 0) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Add new role to the roles list
-	 * 
-	 * @param role
-	 *            the new role
-	 */
-	public void addRole(RoleEntity role) {
-		if (roles == null)
-			roles = new ArrayList<RoleEntity>();
-		if (!roles.contains(role)) {
-			roles.add(role);
-		}
-	}
-
-	/**
-	 * Remove existing role from the roles list
-	 * 
-	 * @param role
-	 *            which will be removed
-	 */
-	public void removeRole(RoleEntity role) {
-		if (roles != null && roles.contains(role)) {
-			roles.remove(role);
-		}
-	}
-
-	/**
-	 * Remove all role from the roles list
-	 * 
-	 * @param role
-	 *            which will be removed
-	 */
-	public void removeAllRole() {
-		if (roles != null) {
-			for (RoleEntity role : roles) {
-				roles.remove(role);
-			}
-		}
+		return credentialsExpired;
 	}
 
 	/*
 	 * getter & setter
 	 */
 
-	public Key getKey() {
-		return this.key;
-	}
-
-	public void setKey(Key key) {
-		this.key = key;
-	}
-
-	public String getUsername() {
-		return this.username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return this.password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public boolean isAccountNonExpired() {
-		return this.accountNonExpired;
-	}
-
-	public void isAccountNonExpired(boolean accountNonExpired) {
-		this.accountNonExpired = accountNonExpired;
-	}
-
-	private String getAccountExpired() {
-		boolean nonExpired = isAccountNonExpired();
-		if (nonExpired) {
-			setAccountExpired(Constants.LOGIN_ACCOUNT_IS_OK);
-		} else {
-			setAccountExpired(Constants.LOGIN_ACCOUNT_EXPIRED);
-		}
-
-		return this.accountExpired;
-	}
-
-	private void setAccountExpired(String accountExpired) {
-		this.accountExpired = accountExpired;
-		boolean state = (Constants.LOGIN_ACCOUNT_IS_OK.equals(accountExpired)) ? true
-				: false;
-		isAccountNonExpired(state);
-	}
-
-	public boolean isAccountNonLocked() {
-		return this.accountNonLocked;
-	}
-
-	public void isAccountNonLocked(boolean accountNonLocked) {
-		this.accountNonLocked = accountNonLocked;
-	}
-
-	private String getAccountLocked() {
-		boolean nonLocked = isAccountNonLocked();
-		if (nonLocked) {
-			setAccountLocked(Constants.LOGIN_ACCOUNT_IS_OK);
-		} else {
-			setAccountLocked(Constants.LOGIN_ACCOUNT_LOCKED);
-		}
-
-		return this.accountLocked;
-	}
-
-	private void setAccountLocked(String locked) {
-		this.accountLocked = locked;
-		boolean state = (Constants.LOGIN_ACCOUNT_IS_OK.equals(locked)) ? true
-				: false;
-		isAccountNonLocked(state);
-	}
-
-	public boolean isCredentialsNonExpired() {
-		return this.credentialsNonExpired;
-	}
-
-	public void isCredentialsNonExpired(boolean credentialsNonExpired) {
-		this.credentialsNonExpired = credentialsNonExpired;
-	}
-
-	private String getCredentialsExpired() {
-		boolean nonExpired = isCredentialsNonExpired();
-		if (nonExpired) {
-			setCredentialsExpired(Constants.LOGIN_ACCOUNT_IS_OK);
-		} else {
-			setCredentialsExpired(Constants.LOGIN_ACCOUNT_PASSWORD_EXPIRED);
-		}
-
-		return this.credentialsExpired;
-	}
-
-	private void setCredentialsExpired(String credentialsExpired) {
-		this.credentialsExpired = credentialsExpired;
-		boolean state = (Constants.LOGIN_ACCOUNT_IS_OK
-				.equals(credentialsExpired)) ? true : false;
-		isCredentialsNonExpired(state);
-	}
-
-	public boolean isEnabled() {
-		return this.enabled;
-	}
-
-	public void isEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	private String getDisabled() {
+	private String getDisabled()
+	{
 		boolean enabled = isEnabled();
-		if (enabled) {
-			setDisabled(Constants.LOGIN_ACCOUNT_IS_OK);
-		} else {
-			setDisabled(Constants.LOGIN_ACCOUNT_DISABLED);
+		if (enabled)
+		{
+			setDisabled(Constants.LOGIN_EMPTY);
+		}
+		else
+		{
+			setDisabled(Constants.LOGIN_DISABLED);
 		}
 
-		return this.disabled;
+		return disabled;
 	}
 
-	private void setDisabled(String disabled) {
-		this.disabled = disabled;
-		boolean state = (Constants.LOGIN_ACCOUNT_IS_OK.equals(disabled)) ? true
-				: false;
-		isEnabled(state);
+	public Long getKey()
+	{
+		return key;
 	}
 
-	public Collection<RoleEntity> getRoles() {
+	public String getPassword()
+	{
+		return password;
+	}
+
+	// public Collection<Key> getRoleKeys()
+	// {
+	// return roleKeys;
+	// }
+
+	/**
+	 * Get
+	 * 
+	 * @return the roles
+	 */
+	public Set<RoleEntity> getRoles()
+	{
 		return roles;
 	}
 
-	public void setRoles(Collection<RoleEntity> roles) {
-		this.roles = roles;
-	}
+	public String getStatus()
+	{
+		String status = Constants.LOGIN_ACTIVE;
 
-	public String getStatus() {
-		String status = Constants.LOGIN_ACCOUNT_IS_OK;
-
-		if (!Constants.LOGIN_ACCOUNT_IS_OK.equals(getAccountExpired())) {
+		if (!Constants.LOGIN_EMPTY.equals(getAccountExpired()))
+		{
 			status = getAccountExpired();
-		} else if (!Constants.LOGIN_ACCOUNT_IS_OK.equals(getAccountLocked())) {
+		}
+		else if (!Constants.LOGIN_EMPTY.equals(getAccountLocked()))
+		{
 			status = getAccountLocked();
-		} else if (!Constants.LOGIN_ACCOUNT_IS_OK
-				.equals(getCredentialsExpired())) {
+		}
+		else if (!Constants.LOGIN_EMPTY.equals(getCredentialsExpired()))
+		{
 			status = getCredentialsExpired();
-		} else if (!Constants.LOGIN_ACCOUNT_IS_OK.equals(getDisabled())) {
+		}
+		else if (!Constants.LOGIN_EMPTY.equals(getDisabled()))
+		{
 			status = getDisabled();
 		}
 
 		return status;
 	}
 
-	public void setStatus(String newStatus) {
-		String status = newStatus;
-		String okStatus = Constants.LOGIN_ACCOUNT_IS_OK;
+	public String getUsername()
+	{
+		return username;
+	}
 
-		if (Constants.LOGIN_ACCOUNT_EXPIRED.equals(status)) {
-			status = Constants.LOGIN_ACCOUNT_EXPIRED;
+	/**
+	 * Check weather the loginEntity has role or not
+	 */
+	public boolean hasRole()
+	{
+		// if (roleKeys == null || roleKeys.size() > 0)
+		// {
+		// return true;
+		// }
+		if (roles == null || roles.size() > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public boolean isAccountNonExpired()
+	{
+		return accountNonExpired;
+	}
+
+	public void isAccountNonExpired(boolean accountNonExpired)
+	{
+		this.accountNonExpired = accountNonExpired;
+	}
+
+	public boolean isAccountNonLocked()
+	{
+		return accountNonLocked;
+	}
+
+	public void isAccountNonLocked(boolean accountNonLocked)
+	{
+		this.accountNonLocked = accountNonLocked;
+	}
+
+	public boolean isCredentialsNonExpired()
+	{
+		return credentialsNonExpired;
+	}
+
+	public void isCredentialsNonExpired(boolean credentialsNonExpired)
+	{
+		this.credentialsNonExpired = credentialsNonExpired;
+	}
+
+	public boolean isEnabled()
+	{
+		return enabled;
+	}
+
+	public void isEnabled(boolean enabled)
+	{
+		this.enabled = enabled;
+	}
+
+	/**
+	 * Remove existing role key from the roles list
+	 * 
+	 * @param role which will be removed
+	 */
+	public void removeRole(/* Key roleKey */RoleEntity role)
+	{
+		// if (roleKeys != null && roleKeys.contains(roleKey))
+		// {
+		// roleKeys.remove(roleKey);
+		// }
+		if (roles != null && roles.contains(role))
+		{
+			roles.remove(role);
+		}
+	}
+
+	private void setAccountExpired(String accountExpired)
+	{
+		this.accountExpired = accountExpired;
+		boolean state = (Constants.LOGIN_EMPTY.equals(accountExpired)) ? true : false;
+		isAccountNonExpired(state);
+	}
+
+	private void setAccountLocked(String locked)
+	{
+		accountLocked = locked;
+		boolean state = (Constants.LOGIN_EMPTY.equals(locked)) ? true : false;
+		isAccountNonLocked(state);
+	}
+
+	private void setCredentialsExpired(String credentialsExpired)
+	{
+		this.credentialsExpired = credentialsExpired;
+		boolean state = (Constants.LOGIN_EMPTY.equals(credentialsExpired)) ? true : false;
+		isCredentialsNonExpired(state);
+	}
+
+	private void setDisabled(String disabled)
+	{
+		this.disabled = disabled;
+		boolean state = (Constants.LOGIN_EMPTY.equals(disabled)) ? true : false;
+		isEnabled(state);
+	}
+
+	public void setKey(Long key)
+	{
+		this.key = key;
+	}
+
+	public void setPassword(String password)
+	{
+		this.password = password;
+	}
+
+	// public void setRoleKeys(Collection<Key> roleKeys)
+	// {
+	// this.roleKeys = roleKeys;
+	// }
+
+	public void setRoles(Set<RoleEntity> roles)
+	{
+		this.roles = roles;
+	}
+
+	public void setStatus(String newStatus)
+	{
+		String status = newStatus;
+		String okStatus = Constants.LOGIN_EMPTY;
+
+		if (Constants.LOGIN_EXPIRED.equals(status))
+		{
+			status = Constants.LOGIN_EXPIRED;
 			setAccountExpired(status);
 			setAccountLocked(okStatus);
 			setCredentialsExpired(okStatus);
 			setDisabled(okStatus);
-		} else if (Constants.LOGIN_ACCOUNT_LOCKED.equals(status)) {
-			status = Constants.LOGIN_ACCOUNT_LOCKED;
+		}
+		else if (Constants.LOGIN_LOCKED.equals(status))
+		{
+			status = Constants.LOGIN_LOCKED;
 			setAccountLocked(status);
 			setAccountExpired(okStatus);
 			setCredentialsExpired(okStatus);
 			setDisabled(okStatus);
-		} else if (Constants.LOGIN_ACCOUNT_PASSWORD_EXPIRED.equals(status)) {
-			status = Constants.LOGIN_ACCOUNT_PASSWORD_EXPIRED;
+		}
+		else if (Constants.LOGIN_PASSWORD.equals(status))
+		{
+			status = Constants.LOGIN_PASSWORD;
 			setCredentialsExpired(status);
 			setAccountExpired(okStatus);
 			setAccountLocked(okStatus);
 			setDisabled(okStatus);
-		} else if (Constants.LOGIN_ACCOUNT_DISABLED.equals(status)) {
-			status = Constants.LOGIN_ACCOUNT_DISABLED;
+		}
+		else if (Constants.LOGIN_DISABLED.equals(status))
+		{
+			status = Constants.LOGIN_DISABLED;
 			setDisabled(status);
 			setAccountExpired(okStatus);
 			setAccountLocked(okStatus);
 			setCredentialsExpired(okStatus);
-		} else {
-			status = Constants.LOGIN_ACCOUNT_IS_OK;
+		}
+		else
+		{
+			status = Constants.LOGIN_ACTIVE;
 			setDisabled(okStatus);
 			setAccountExpired(okStatus);
 			setAccountLocked(okStatus);
@@ -367,6 +429,11 @@ public class LoginEntity implements Serializable, UserDetails {
 		}
 
 		this.status = status;
+	}
+
+	public void setUsername(String username)
+	{
+		this.username = username;
 	}
 
 }

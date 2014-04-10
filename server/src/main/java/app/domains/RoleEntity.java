@@ -10,54 +10,60 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.google.appengine.api.datastore.Key;
-
 /**
  * Class implementing a role entity.
  * 
  * @author atka
- * @date 07.26.2011
  */
+@SuppressWarnings("serial")
 @Table(name = "role")
 @Entity
 @NamedQueries({
-		@NamedQuery(name = "RoleEntity.findRoleByName", query = "SELECT l FROM RoleEntity l WHERE l.name=:name"),
-		@NamedQuery(name = "RoleEntity.loadAll", query = "SELECT l FROM RoleEntity l") })
-public class RoleEntity implements Serializable {
+		@NamedQuery(name = "RoleEntity.findRoleByName", query = "SELECT r FROM RoleEntity r WHERE r.name=:name"),
+		@NamedQuery(name = "RoleEntity.loadAll", query = "SELECT r FROM RoleEntity r") })
+public class RoleEntity implements Serializable
+{
+
+	private String	description;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Key key;
+	// private Key key;
+	private Long	key;
 
-	private String name;
+	private String	name;
 
-	private String description;
+	// *********************************************************
+	// Getters/Setters
+	// *********************************************************
 
-	/*
-	 * getter & setter
-	 */
-
-	public Key getKey() {
-		return this.key;
+	public String getDescription()
+	{
+		return description;
 	}
 
-	public void setKey(Key key) {
+	public Long getKey()
+	{
+		return key;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+	public void setKey(Long key)
+	{
 		this.key = key;
 	}
 
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
-	}
-
-	public String getDescription() {
-		return this.description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 }

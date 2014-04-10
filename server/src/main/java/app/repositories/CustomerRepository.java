@@ -1,5 +1,8 @@
 package app.repositories;
 
+import app.domains.CustomerEntity;
+import app.persistence.JpaGenericDAO;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +12,6 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import app.domains.CustomerEntity;
-import app.persistence.JpaGenericDAO;
 
 
 /**

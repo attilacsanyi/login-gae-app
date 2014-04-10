@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:flex="http://www.springframework.org/schema/flex"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/flex http://www.springframework.org/schema/flex/spring-flex-1.0.xsd">
+
+	<!-- Translate user not found exception or user has no proper role -->
+	<bean id="userNotFoundExceptionTranslator" class="app.translators.UserNotFoundExceptionTranslator" />
+
+	<flex:message-broker>
+	
+		<!-- Translate UserNotFoundException to Flex MessageException -->
+		<flex:exception-translator ref="userNotFoundExceptionTranslator"/>
+	
+		<!-- The channels declared here must match the channel declarations in services-config.xml -->
+		
+		<!-- Default channels for Remoting -->
+		<flex:remoting-service default-channels="my-amf,my-secure-amf"/>
+		
+		<!-- Default channels for Messaging -->
+		<flex:message-service default-channels="my-streaming-amf,my-polling-amf,my-longpolling-amf" />
+				
+		<!-- Installs and configures Spring Security integration -->
+		<flex:secured />
+	</flex:message-broker>
+
+</beans>

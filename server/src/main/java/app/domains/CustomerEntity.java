@@ -10,97 +10,112 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.google.appengine.api.datastore.Key;
-
 /**
  * Class implementing a customer entity.
  * 
  * @author iwaszkiewicz
  * @date 06.02.2010
  */
+@SuppressWarnings("serial")
 @Table(name = "customer")
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "CustomerEntity.findCustomerByPhoneNumber",
-    		query = "SELECT c FROM CustomerEntity c WHERE c.phone=:phone"),
-    @NamedQuery(name = "CustomerEntity.loadAll", query = "SELECT c FROM CustomerEntity c") 
+		@NamedQuery(name = "CustomerEntity.findCustomerByPhoneNumber",
+				query = "SELECT c FROM CustomerEntity c WHERE c.phone=:phone"),
+		@NamedQuery(name = "CustomerEntity.loadAll", query = "SELECT c FROM CustomerEntity c")
 })
-public class CustomerEntity implements Serializable {
- 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Key key;
+public class CustomerEntity implements Serializable
+{
 
-    private String firstname;
+	private String	city;
 
-    private String lastname;
+	private String	firstname;
 
-    private String phone;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	// private Key key;
+	private Long	key;
 
-    private String street;
+	private String	lastname;
 
-    private String postal;
+	private String	phone;
 
-    private String city;
+	private String	postal;
 
-    /*
-     * getter & setter
-     */
+	private String	street;
 
-    public Key getKey() {
-        return this.key;
-    }
+	/*
+	 * getter & setter
+	 */
 
-    public void setKey(Key key) {
-        this.key = key;
-    }
+	public String getCity()
+	{
+		return city;
+	}
 
-    public String getPhone() {
-        return this.phone;
-    }
+	public String getFirstname()
+	{
+		return firstname;
+	}
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+	public Long getKey()
+	{
+		return key;
+	}
 
-    public String getStreet() {
-        return this.street;
-    }
+	public String getLastname()
+	{
+		return lastname;
+	}
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
+	public String getPhone()
+	{
+		return phone;
+	}
 
-    public String getPostal() {
-        return this.postal;
-    }
+	public String getPostal()
+	{
+		return postal;
+	}
 
-    public void setPostal(String postal) {
-        this.postal = postal;
-    }
+	public String getStreet()
+	{
+		return street;
+	}
 
-    public String getCity() {
-        return this.city;
-    }
+	public void setCity(String city)
+	{
+		this.city = city;
+	}
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+	public void setFirstname(String firstname)
+	{
+		this.firstname = firstname;
+	}
 
-    public String getFirstname() {
-        return this.firstname;
-    }
+	public void setKey(Long key)
+	{
+		this.key = key;
+	}
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
+	public void setLastname(String lastname)
+	{
+		this.lastname = lastname;
+	}
 
-    public String getLastname() {
-        return this.lastname;
-    }
+	public void setPhone(String phone)
+	{
+		this.phone = phone;
+	}
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
+	public void setPostal(String postal)
+	{
+		this.postal = postal;
+	}
+
+	public void setStreet(String street)
+	{
+		this.street = street;
+	}
 
 }

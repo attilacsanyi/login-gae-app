@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx" clipAndEnableScrolling="false">
+	
+	<fx:Script>
+		<![CDATA[
+			import app.dto.Role;
+			
+			import mx.collections.ArrayList;
+			import mx.collections.ListCollectionView;
+			
+			// You SHOULD be able to use this method to programatically
+			// change the appearance of the data in this cell. However it doesn't
+			// seem to be called, yet. Probably a work in progress.
+			override public function prepare( willBeRecycled:Boolean ):void {
+				if (data != null && data.roles != null)
+				{
+					label = "";
+					var sep:String = "";
+					for each(var role:Role in data.roles)
+					{
+						/*if (role != null)
+						{*/
+							label += sep + role.name;
+							sep = ";";
+						//}
+					}
+				}
+			}
+			
+			override public function discard(hasBeenRecycled:Boolean):void {
+				
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Label text="{label}" verticalCenter="0" left="5"/>
+	
+</s:GridItemRenderer>

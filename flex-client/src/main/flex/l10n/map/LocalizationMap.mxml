@@ -5,18 +5,27 @@
 			localeChanging="onUpdateAlert();">
 	
 	<fx:Metadata>
-		[ResourceBundle("application")]
-		[ResourceBundle("loginView")]
-		[ResourceBundle("customersView")]
+		[ResourceBundle("application")][ResourceBundle("languageBar")]
+		[ResourceBundle("mainView")]
+		[ResourceBundle("securityView")]
+		[ResourceBundle("loginView")][ResourceBundle("roleView")][ResourceBundle("customersView")]
+		[ResourceBundle("loginForm")][ResourceBundle("roleForm")]
+		[ResourceBundle("loginGrid")][ResourceBundle("roleGrid")]
 		[ResourceBundle("resources")]
-		[ResourceBundle("languageBar")]
 	</fx:Metadata>
 					
 	<fx:Script>
 		<![CDATA[
-			import com.app.views.grids.CustomerGrid;
-			import com.app.views.SecurityView;
+			import com.app.views.CustomerView;
+			import com.app.views.LoginView;
 			import com.app.views.MainView;
+			import com.app.views.RoleView;
+			import com.app.views.SecurityView;
+			import com.app.views.forms.LoginForm;
+			import com.app.views.forms.RoleForm;
+			import com.app.views.grids.CustomerGrid;
+			import com.app.views.grids.LoginGrid;
+			import com.app.views.grids.RoleGrid;
 			
 			import l10n.views.LanguageBar;
 			
@@ -57,20 +66,130 @@
 	</commandFactory>
 	-->
 
+	<!-- APPLICATION -->
 	<ResourceInjector bundleName="application" target="{App}" >
 	</ResourceInjector>
 	
-	<ResourceInjector bundleName="loginView" target="{SecurityView}" >
-		<ResourceSetter property="loginView_formItem_username.label" 			key="loginView_formItem_username.label" />
-		<ResourceSetter property="loginView_formItem_password.label" 			key="loginView_formItem_password.label" />
-		<ResourceSetter property="loginView_button_login.label"					key="loginView_button_login.label" />
-		<ResourceSetter property="loginView_button_logout.label" 				key="loginView_button_logout.label" />
+	<!-- LANGUAGE BAR -->
+	<ResourceInjector  bundleName="languageBar" target="{LanguageBar}" >
+		<ResourceSetter property="lblBarHelp.text" 								key="lblBarHelp.text" parameters="{['target.selectedLocale']}" />
+		<ResourceSetter property="flags[0].toolTip" 							key="flag.toolTip.hu_HU" />
+		<ResourceSetter property="flags[1].toolTip" 							key="flag.toolTip.en_US" />
 	</ResourceInjector>
 	
-	<ResourceInjector bundleName="customersView" target="{MainView}" >
-		<ResourceSetter property="customersView.title" 							key="customersView.title" />
+	<!-- SECURITY VIEW -->
+	<ResourceInjector bundleName="securityView" target="{SecurityView}" >
+		<ResourceSetter property="securityView_formHeading.label" 				key="securityView_formHeading.label.logout" state="logout" />
+		<ResourceSetter property="securityView_formHeading.label" 				key="securityView_formHeading.label.login" state="login" />
+		<ResourceSetter property="securityView_formItem_username.label" 		key="securityView_formItem_username.label" />
+		<ResourceSetter property="securityView_formItem_password.label" 		key="securityView_formItem_password.label" />
+		<ResourceSetter property="securityView_textInput_username.prompt" 		key="securityView_textInput_username.prompt" />
+		<ResourceSetter property="securityView_textInput_password.prompt" 		key="securityView_textInput_password.prompt" />
+		<ResourceSetter property="securityView_button.label"					key="securityView_button.label.logout" state="logout" />
+		<ResourceSetter property="securityView_button.label"					key="securityView_button.label.login" state="login" />
 	</ResourceInjector>
 	
+	<!-- MAIN VIEW -->
+	<ResourceInjector bundleName="mainView" target="{MainView}" >
+		<ResourceSetter property="mainView_navigatorContent_login.label" 		key="mainView_navigatorContent_login.label" />
+		<ResourceSetter property="mainView_navigatorContent_role.label" 		key="mainView_navigatorContent_role.label" />
+		<ResourceSetter property="mainView_navigatorContent_customer.label" 	key="mainView_navigatorContent_customer.label" />
+	</ResourceInjector>
+	
+	<!-- ROLE VIEW -->
+	<ResourceInjector bundleName="roleView" target="{RoleView}" >
+		<ResourceSetter property="title" 										key="roleView_panel.title" />
+		<ResourceSetter property="roleView_label_loading.text"					key="roleView_label_loading.text" />
+		<ResourceSetter property="roleView_button_create.label"					key="roleView_button_create.label" />
+		<ResourceSetter property="roleView_button_delete.label"					key="roleView_button_delete.label" />
+		<ResourceSetter property="roleView_button_update.label"					key="roleView_button_update.label" />
+		<ResourceSetter property="roleView_button_delall.label"					key="roleView_button_delall.label" />
+	</ResourceInjector>
+	
+	<!-- LOGIN VIEW -->
+	<ResourceInjector bundleName="loginView" target="{LoginView}" >
+		<ResourceSetter property="title" 										key="loginView_panel.title" />
+		<ResourceSetter property="loginView_label_loading.text"					key="loginView_label_loading.text" />
+		<ResourceSetter property="loginView_button_create.label"				key="loginView_button_create.label" />
+		<ResourceSetter property="loginView_button_delete.label"				key="loginView_button_delete.label" />
+		<ResourceSetter property="loginView_button_update.label"				key="loginView_button_update.label" />
+		<ResourceSetter property="loginView_button_delall.label"				key="loginView_button_delall.label" />
+	</ResourceInjector>
+	
+	<!-- ROLE GRID -->
+	<ResourceInjector bundleName="roleGrid" target="{RoleGrid}" >
+		<ResourceSetter property="roleGrid_gridcolumn_description.headerText"	key="roleGrid_gridcolumn_description.headerText" />
+		<ResourceSetter property="roleGrid_gridcolumn_name.headerText"			key="roleGrid_gridcolumn_name.headerText" />
+	</ResourceInjector>
+	
+	<!-- ROLE GRID -->
+	<ResourceInjector bundleName="loginGrid" target="{LoginGrid}" >
+		<ResourceSetter property="loginGrid_gridcolumn_username.headerText"		key="loginGrid_gridcolumn_username.headerText" />
+		<ResourceSetter property="loginGrid_gridcolumn_password.headerText"		key="loginGrid_gridcolumn_password.headerText" />
+		<ResourceSetter property="loginGrid_gridcolumn_status.headerText"		key="loginGrid_gridcolumn_status.headerText" />
+		<ResourceSetter property="loginGrid_gridcolumn_roles.headerText"		key="loginGrid_gridcolumn_roles.headerText" />
+	</ResourceInjector>
+	
+	<!-- LOGIN FORM -->
+	<ResourceInjector bundleName="loginForm" target="{LoginForm}" >
+		<ResourceSetter property="title"		 								key="loginForm_titleWindow.title.create" state="create" />
+		<ResourceSetter property="title"		 								key="loginForm_titleWindow.title.delete" state="delete" />
+		<ResourceSetter property="title"							 			key="loginForm_titleWindow.title.update" state="update" />
+		<ResourceSetter property="title"		 								key="loginForm_titleWindow.title.delall" state="delall" />
+		
+		<ResourceSetter property="loginForm_formHeading.label"		 			key="loginForm_formHeading.label.create" state="create" />
+		<ResourceSetter property="loginForm_formHeading.label"		 			key="loginForm_formHeading.label.delete" state="delete" />
+		<ResourceSetter property="loginForm_formHeading.label"		 			key="loginForm_formHeading.label.update" state="update" />
+		<ResourceSetter property="loginForm_formHeading.label"		 			key="loginForm_formHeading.label.delall" state="delall" />
+		
+		<ResourceSetter property="loginForm_formItem_loginUsername.label"		key="loginForm_formItem_loginUsername.label" />
+		<ResourceSetter property="loginForm_formItem_loginPassword.label"		key="loginForm_formItem_loginPassword.label" />
+		<ResourceSetter property="loginForm_formItem_loginStatus.label"			key="loginForm_formItem_loginStatus.label" />
+		<ResourceSetter property="loginForm_comboBox_status.prompt"				key="loginForm_comboBox_status.prompt" />
+		<ResourceSetter property="loginForm_formItem_loginRoles.label"			key="loginForm_formItem_loginRoles.label" />
+		<ResourceSetter property="loginForm_comboBox_roles.prompt"				key="loginForm_comboBox_roles.prompt" />
+		
+		<ResourceSetter property="loginForm_button_crud.label"		 			key="loginForm_button_crud.label.create" state="create" />
+		<ResourceSetter property="loginForm_button_crud.label"		 			key="loginForm_button_crud.label.delete" state="delete" />
+		<ResourceSetter property="loginForm_button_crud.label"		 			key="loginForm_button_crud.label.update" state="update" />
+		<ResourceSetter property="loginForm_button_crud.label"		 			key="loginForm_button_crud.label.delall" state="delall" />
+		<ResourceSetter property="loginForm_button_cancel.label"		 		key="loginForm_button_cancel.label" />
+		
+		<ResourceSetter property="statusActive.label"		 					key="statusActive.label" />
+		<ResourceSetter property="statusDisabled.label"		 					key="statusDisabled.label" />
+		<ResourceSetter property="statusLocked.label"		 					key="statusLocked.label" />
+		<ResourceSetter property="statusExpired.label"		 					key="statusExpired.label" />
+		<ResourceSetter property="statusPassword.label"		 					key="statusPassword.label" />
+	</ResourceInjector>
+	
+	<!-- ROLE FORM -->
+	<ResourceInjector bundleName="roleForm" target="{RoleForm}" >
+		<ResourceSetter property="title"		 								key="roleForm_titleWindow.title.create" state="create" />
+		<ResourceSetter property="title"		 								key="roleForm_titleWindow.title.delete" state="delete" />
+		<ResourceSetter property="title"							 			key="roleForm_titleWindow.title.update" state="update" />
+		<ResourceSetter property="title"		 								key="roleForm_titleWindow.title.delall" state="delall" />
+		
+		<ResourceSetter property="roleForm_formHeading.label"		 			key="roleForm_formHeading.label.create" state="create" />
+		<ResourceSetter property="roleForm_formHeading.label"		 			key="roleForm_formHeading.label.delete" state="delete" />
+		<ResourceSetter property="roleForm_formHeading.label"		 			key="roleForm_formHeading.label.update" state="update" />
+		<ResourceSetter property="roleForm_formHeading.label"		 			key="roleForm_formHeading.label.delall" state="delall" />
+		
+		<ResourceSetter property="roleForm_formItem_roleName.label"		 		key="roleForm_formItem_roleName.label" />
+		<ResourceSetter property="roleForm_formItem_roleDescription.label"		key="roleForm_formItem_roleDescription.label" />
+		
+		<ResourceSetter property="roleForm_button_crud.label"		 			key="roleForm_button_crud.label.create" state="create" />
+		<ResourceSetter property="roleForm_button_crud.label"		 			key="roleForm_button_crud.label.delete" state="delete" />
+		<ResourceSetter property="roleForm_button_crud.label"		 			key="roleForm_button_crud.label.update" state="update" />
+		<ResourceSetter property="roleForm_button_crud.label"		 			key="roleForm_button_crud.label.delall" state="delall" />
+		<ResourceSetter property="roleForm_button_cancel.label"		 			key="roleForm_button_cancel.label" />
+	</ResourceInjector>
+	
+	<!-- CUSTOMER VIEW -->
+	<ResourceInjector bundleName="customersView" target="{CustomerView}" >
+		<ResourceSetter property="title" 										key="customersView.title" />
+	</ResourceInjector>
+	
+	<!-- CUSTOMER GRID -->
 	<ResourceInjector bundleName="customersView" target="{CustomerGrid}" >
 		<ResourceSetter property="customersView_label_loading.text" 			key="customersView_label_loading.text" />
 		<ResourceSetter property="customersView_key.headerText" 				key="customersView_key.headerText" />
@@ -81,11 +200,5 @@
 		<ResourceSetter property="customersView_phone.headerText" 				key="customersView_phone.headerText" />
 		<ResourceSetter property="customersView_street.headerText" 				key="customersView_street.headerText" />
 	</ResourceInjector>
-	
-	<ResourceInjector  bundleName="languageBar" target="{LanguageBar}" >
-		<ResourceSetter property="lblBarHelp.text" 								key="lblBarHelp.text" parameters="{['target.selectedLocale']}" />
-		<ResourceSetter property="flags[0].toolTip" 							key="flag.toolTip.hu_HU" />
-		<ResourceSetter property="flags[1].toolTip" 							key="flag.toolTip.en_US" />
-	</ResourceInjector>
-	
+		
 </LocaleMap>

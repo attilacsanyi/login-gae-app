@@ -1,11 +1,16 @@
 package com.app.models.grids
 {
+	import app.dto.Role;
+	
 	import com.app.events.RoleEvent;
 	import com.app.models.RoleModel;
 	
 	import flash.events.IEventDispatcher;
 	
 	import mx.collections.IList;
+	import mx.utils.ObjectUtil;
+	
+	import spark.components.DataGrid;
 
 	public class RoleGridPresentationModel
 	{
@@ -21,7 +26,7 @@ package com.app.models.grids
 		[PostConstruct]
 		public function postConstruct():void
 		{
-			dispatcher.dispatchEvent(new RoleEvent( RoleEvent.ROLES_REQUESTED));
+			dispatcher.dispatchEvent(new RoleEvent( RoleEvent.GETALL));
 			roleModel.isRolesLoading = true;
 		}
 		
@@ -29,9 +34,19 @@ package com.app.models.grids
 		// Public Methods 
 		// *********************************************************
 		
-		public function createDemoRole():void
+		// Set selected role when click on the role grid	
+		public function setSelectedRole(dg:DataGrid):void
 		{
-			dispatcher.dispatchEvent(new RoleEvent( RoleEvent.ROLES_DEMO));
+			if (dg.selectedItem != null) {
+				var selRole:Role = dg.selectedItem as Role;
+				if (selRole != null && selRole is Role)
+				{
+					roleModel.selectedRole = selRole;
+
+					// Create copy into updated role object
+					roleModel.updatedRole = ObjectUtil.copy(selRole) as Role;
+				}
+			}
 		}
 		
 		// *********************************************************

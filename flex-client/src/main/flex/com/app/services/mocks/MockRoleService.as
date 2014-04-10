@@ -57,5 +57,42 @@ package com.app.services.mocks
 			
 			return roles;
 		}
+		
+		public function deleteAllRoles():AsyncToken
+		{
+			// TODO Auto Generated method stub
+			return null;
+		}
+		
+		public function deleteRole(role:Role):AsyncToken
+		{
+			// TODO Auto Generated method stub
+			return null;
+		}
+		
+		public function deleteRoleByName(roleName:String):AsyncToken
+		{
+			// TODO Auto Generated method stub
+			return null;
+		}
+		
+		public function existsRole(roleName:String):AsyncToken
+		{
+			// TODO Auto Generated method stub
+			return null;
+		}
+		
+		public function updateRole(role:Role):AsyncToken
+		{
+			// TODO Auto Generated method stub
+			return null;
+		}
+		
+		public function findRoleByName(roleName:String):AsyncToken
+		{
+			// TODO Auto Generated method stub
+			return null;
+		}
+		
 	}
 }

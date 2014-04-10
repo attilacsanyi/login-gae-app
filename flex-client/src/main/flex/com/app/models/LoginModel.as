@@ -7,26 +7,43 @@ package com.app.models
 	
 	import flash.events.IEventDispatcher;
 	
+	import mx.collections.ArrayList;
 	import mx.collections.IList;
+	import mx.collections.ListCollectionView;
 	
 	public class LoginModel
 	{
 		[Dispatcher] public var dispatcher:IEventDispatcher;	// Dispatcher
 		
 		private var _logins:IList;
-		private var _login:Login;
+		private var _createdLogin:Login;	// Use when create a new login
+		private var _selectedLogin:Login;	// Use when delete a login
+		private var _updatedLogin:Login;	// Use when update a login
 		private var _selectedRole:Role;
 		private var _isLoginsLoading:Boolean;
 		private var _isLoginCreating:Boolean;
 		
 		public function LoginModel(){
-			if (_login == null) { _login = new Login; }
+			if (_createdLogin == null) { _createdLogin = new Login;}
+			if (_selectedLogin == null) { _selectedLogin = new Login; }
+			if (_updatedLogin == null) { _updatedLogin = new Login; }
 		}
 		
 		// *********************************************************
 		// Getters/Setters 
 		// *********************************************************
 		
+		[Bindable]
+		public function get createdLogin():Login
+		{
+			return _createdLogin;
+		}
+
+		public function set createdLogin(value:Login):void
+		{
+			_createdLogin = value;
+		}
+
 		public function get logins():IList
 		{
 			return _logins;
@@ -50,17 +67,6 @@ package com.app.models
 		}
 
 		[Bindable]
-		public function get login():Login
-		{
-			return _login;
-		}
-
-		public function set login(value:Login):void
-		{
-			_login = value;
-		}
-
-		[Bindable]
 		public function get selectedRole():Role
 		{
 			return _selectedRole;
@@ -80,6 +86,28 @@ package com.app.models
 		public function set isLoginCreating(value:Boolean):void
 		{
 			_isLoginCreating = value;
+		}
+
+		[Bindable]
+		public function get selectedLogin():Login
+		{
+			return _selectedLogin;
+		}
+
+		public function set selectedLogin(value:Login):void
+		{
+			_selectedLogin = value;
+		}
+
+		[Bindable]
+		public function get updatedLogin():Login
+		{
+			return _updatedLogin;
+		}
+
+		public function set updatedLogin(value:Login):void
+		{
+			_updatedLogin = value;
 		}
 
 

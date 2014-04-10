@@ -2,15 +2,14 @@
 <s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx"
-		  verticalAlign="middle" horizontalAlign="right"
+		  verticalAlign="middle" horizontalAlign="left"
 		  currentState="{state}" >
 	
 	<s:states>
-		<s:State name="default"/>
-		<s:State name="loggedIn"/>
-		<s:State name="loggedOut"/>
+		<s:State name="login"/>
+		<s:State name="logout"/>
 	</s:states>
-	
+		
 	<fx:Script>
 		<![CDATA[
 			import com.app.models.presentations.SecurityViewPresentationModel;
@@ -27,25 +26,42 @@
 	</fx:Script>
 	
 	
-	<s:Form defaultButton="{loginView_button_login}">
+	<s:Form defaultButton="{securityView_button}">
+
 		<s:layout>
 			<s:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
 		</s:layout>
-		<s:FormHeading label="Login" />
-		<s:FormItem id="loginView_formItem_username" label="Username" excludeFrom="loggedIn">
-			<s:TextInput id="loginView_textInput_username" text="@{model.securityModel.login.username}" excludeFrom="loggedIn"/>
-		</s:FormItem>
-		<s:FormItem id="loginView_formItem_password" label="Password" excludeFrom="loggedIn">
-			<s:TextInput id="loginView_textInput_password" text="@{model.securityModel.login.password}" displayAsPassword="true" excludeFrom="loggedIn"/>
+
+		<s:FormHeading id="securityView_formHeading"
+					   label.login="securityView_formHeading.label.login"
+					   label.logout="securityView_formHeading.label.logout" />
+		
+		<s:FormItem id="securityView_formItem_username"
+					label="securityView_formItem_username.label"
+					includeIn="logout">
+			<s:TextInput id="securityView_textInput_username"
+						 text="@{model.securityModel.login.username}"
+						 prompt="securityView_textInput_username.prompt"
+						 includeIn="logout"/>
 		</s:FormItem>
 		
-		<s:Spacer width="100%"/>
-		<s:Button id="loginView_button_login"
-				  label="Login" click="model.login()"
-				  enabled="{!model.securityModel.isLoginProgress}" excludeFrom="loggedIn" />
-		<s:Button id="loginView_button_logout"
-				  label="Logout" click="model.logout()"
-				  enabled="{!model.securityModel.isLogoutProgress}" includeIn="loggedIn" />
+		<s:FormItem id="securityView_formItem_password"
+					label="securityView_formItem_password.label"
+					includeIn="logout">
+			<s:TextInput id="securityView_textInput_password"
+						 text="@{model.securityModel.login.password}" displayAsPassword="true"
+						 prompt="securityView_textInput_password.prompt"
+						 includeIn="logout"/>
+		</s:FormItem>
+		
+		<s:Button id="securityView_button"
+				  label.login="securityView_button.label.loggedIn"
+				  enabled.login="{!model.securityModel.isLogoutProgress}"
+				  click.login="model.logout();"
+				  label.logout="securityView_button.label.logout"
+				  enabled.logout="{!model.securityModel.isAuthenticationProgress}"
+				  visible.logout="{!model.securityModel.isAuthenticationProgress}"
+				  click.logout="model.login();" />
 	</s:Form>
 	
 </s:HGroup>

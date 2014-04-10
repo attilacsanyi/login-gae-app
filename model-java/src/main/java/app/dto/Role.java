@@ -2,6 +2,7 @@ package app.dto;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class Role implements Serializable {
 
 	private String key;

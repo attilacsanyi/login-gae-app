@@ -6,13 +6,18 @@
  */
 
 package app.dto {
+	import mx.collections.ArrayCollection;
+	import mx.collections.ArrayList;
+	import mx.collections.ListCollectionView;
 
 [Bindable]
 [RemoteClass(alias="app.dto.Login")]
     public class Login extends LoginBase {
-public function Login(){
-    super();
-  }
-
-}
+	public function Login(){
+	    super();
+		this.username = "";
+		this.password = "";
+		this.roles = new ArrayCollection();
+	  }
+	}
 }

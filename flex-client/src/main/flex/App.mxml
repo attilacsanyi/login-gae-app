@@ -13,9 +13,8 @@
 	</fx:Declarations>
 	
 	<s:states>
-		<s:State name="default"/>
-		<s:State name="loggedIn"/>
-		<s:State name="loggedOut"/>
+		<s:State name="login"/>
+		<s:State name="logout"/>
 	</s:states>
 	
 	<fx:Script>
@@ -30,8 +29,8 @@
 			public var state:String;
 			
 			[Bindable]
-			[Inject]
-			public var model:AppModel;
+			[Inject("securityModel.isLogoutProgress")]
+			public var isLogoutProgress:Boolean;
 						
 			protected function creationComplete():void
 			{
@@ -57,6 +56,6 @@
 		<l10n:LanguageBar id="languageBar" xmlns:l10n="l10n.views.*"/>
 	</s:controlBarContent>
 	
-	<views:MainView includeIn="loggedIn" enabled="{model.isLoggingOut}"/>
+	<views:MainView excludeFrom="logout" enabled="{!isLogoutProgress}"/>
 	
 </s:Application>

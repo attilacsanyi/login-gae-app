@@ -7,47 +7,68 @@ import app.dto.Role;
 /**
  * Business interface of the role services.
  * 
- * @author atka
- * @date 07.26.2011
+ * @author Atka
  */
-public interface IRoleService {
-
-	boolean createDemoRole();
+public interface IRoleService
+{
 
 	/**
-	 * Checks whether a role with the passed name already exists. <br/>
-	 * (pssst - the result should be boolean)
+	 * Create a new role.
 	 * 
-	 * @param name
-	 *            the searched name
-	 * @return true if there is already a role with the passed name, otherwise
-	 *         false
+	 * @param role the new role to be saved/created
+	 * @return the created role
 	 */
-	boolean existsRole(String name);
+	Role createRole(Role role);
+
+	/**
+	 * Delete all present role objects.
+	 * 
+	 */
+	void deleteAllRoles();
+
+	/**
+	 * Delete role objects.
+	 * 
+	 * @param role the role which will be deleted
+	 */
+	void deleteRole(Role role);
+
+	/**
+	 * Delete role by name.
+	 * 
+	 * @param role the role name which will be deleted
+	 */
+	void deleteRoleByName(String roleName);
+
+	/**
+	 * Checks whether a role with the passed name already exists.
+	 * 
+	 * @param roleName the searched name
+	 * @return true if there is already a role with the passed name, otherwise false
+	 */
+	boolean existsRole(String roleName);
 
 	/**
 	 * Finds/loads a role with the passed name.
 	 * 
-	 * @param name
-	 *            the name of the role to load
-	 * @return the appertaining role or null if there is no role having this
-	 *         name
+	 * @param name the name of the role to load
+	 * @return the founded role or null if there is no role having this name
 	 */
-	Role findRoleByName(String name);
+	Role findRoleByName(String roleName);
 
 	/**
-	 * Saves a new role.
+	 * Return all present role objects.
 	 * 
-	 * @param roleEntity
-	 *            the new roleEntity to be saved/created.
-	 * @return the created roleEntity
-	 */
-	Role createRole(Role roleEntity);
-
-	/**
-	 * Return all perstent role objects.
-	 * 
-	 * @return
+	 * @return list of existing roles
 	 */
 	List<Role> getAllRoles();
+
+	/**
+	 * Update the role. Use create role with existing key
+	 * 
+	 * @param role the new role to be updated
+	 * @return the updated role
+	 */
+	Role updateRole(Role role);
+
 }

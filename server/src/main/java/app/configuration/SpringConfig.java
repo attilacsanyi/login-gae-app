@@ -1,30 +1,48 @@
 package app.configuration;
 
-import app.persistence.GAE_EntityManagerFactory;
-
 import javax.persistence.EntityManagerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaTransactionManager;
+
+import app.persistence.GAE_EntityManagerFactory;
 
 /**
  * @author iwaszkiewicz
  * @date 02.03.2010
  */
 @Configuration
-public class SpringConfig {
+public class SpringConfig
+{
 
-    @Bean
-    public EntityManagerFactory entityManagerFactory() {
-        return new GAE_EntityManagerFactory("persistenceUnit").entityManagerFactory();
-    }
+	@Autowired
+	private org.apache.commons.dbcp.BasicDataSource	dataSource;
 
-    @Bean
-    public JpaTransactionManager transactionManager() {
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory());
-        return transactionManager;
-    }
+	@Bean
+	public EntityManagerFactory entityManagerFactory()
+	{
+		return new GAE_EntityManagerFactory("hibernatePersistenceUnit").entityManagerFactory();
+	}
+
+	// @Bean
+	// public DataSource dataSource() {
+	//
+	// DataSource dataSource = new OracleDataSource();
+	// dataSource.setURL();
+	// dataSource.setUser();
+	// return dataSource;
+	//
+	// }
+
+	@Bean
+	public JpaTransactionManager transactionManager()
+	{
+		JpaTransactionManager transactionManager = new JpaTransactionManager();
+		transactionManager.setEntityManagerFactory(entityManagerFactory());
+		transactionManager.setDataSource(dataSource);
+		return transactionManager;
+	}
 
 }

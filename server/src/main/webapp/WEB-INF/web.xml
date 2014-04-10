@@ -1,52 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	version="2.4">
 
-    <display-name>Spring BlazeDS Integration Samples</display-name>
-    
+	<display-name>Spring BlazeDS Integration Samples</display-name>
+
+	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>
-			/WEB-INF/spring/*-config.xml
-		</param-value>
+		<param-value>/WEB-INF/spring/root-*.xml</param-value>
 	</context-param>
-	
-<!--    <filter>-->
-<!--        <filter-name>springSecurityFilterChain</filter-name>-->
-<!--        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
-<!--    </filter>-->
 
-<!--    <filter-mapping>-->
-<!--      <filter-name>springSecurityFilterChain</filter-name>-->
-<!--      <url-pattern>/*</url-pattern>-->
-<!--    </filter-mapping>-->
-	
+	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	
+
 	<listener>
 		<listener-class>flex.messaging.HttpFlexSession</listener-class>
 	</listener>
-	
+
+	<!-- Servlet for Flex messagebroker -->
 	<servlet>
-		<servlet-name>flex</servlet-name>
+		<servlet-name>flexServlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/flexServlet/flex-context.xml</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
 	<servlet-mapping>
-    	<servlet-name>flex</servlet-name>
-    	<url-pattern>/messagebroker/*</url-pattern>
- 	</servlet-mapping>
+		<servlet-name>flexServlet</servlet-name>
+		<url-pattern>/messagebroker/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Servlet for Spring MVC -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/app-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/spring/*</url-pattern>
+	</servlet-mapping>
 
-     <welcome-file-list>
+	<!-- Servlet for Appengine remote api -->
+	<servlet>
+		<display-name>Remote API Servlet</display-name>
+		<servlet-name>RemoteApiServlet</servlet-name>
+		<servlet-class>com.google.apphosting.utils.remoteapi.RemoteApiServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RemoteApiServlet</servlet-name>
+		<url-pattern>/remote_api</url-pattern>
+	</servlet-mapping>
+
+	<!-- Welcome file is: index.html -->
+	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
-	
-<!-- 	<session-config>  -->
-<!-- 		<session-timeout>30</session-timeout>  -->
-<!-- 	</session-config> -->
 
 </web-app>

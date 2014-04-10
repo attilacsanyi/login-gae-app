@@ -23,7 +23,22 @@ package com.app.models.forms
 		
 		public function createRole():void
 		{
-			dispatcher.dispatchEvent(new RoleEvent( RoleEvent.CREATE, roleModel.role));
+			dispatcher.dispatchEvent(new RoleEvent( RoleEvent.CREATE ));
+		}
+		
+		public function deleteAllRoles():void
+		{
+			dispatcher.dispatchEvent(new RoleEvent( RoleEvent.DELALL ));
+		}
+		
+		public function deleteRole():void
+		{
+			dispatcher.dispatchEvent(new RoleEvent( RoleEvent.DELETE ));
+		}
+		
+		public function updateRole():void
+		{
+			dispatcher.dispatchEvent(new RoleEvent( RoleEvent.UPDATE ));
 		}
 		
 		public function closeWindow(window:TitleWindow):void

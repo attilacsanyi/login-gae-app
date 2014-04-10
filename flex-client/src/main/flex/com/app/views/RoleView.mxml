@@ -1,51 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		 xmlns:s="library://ns.adobe.com/flex/spark" 
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:grids="com.app.views.grids.*"
 		 xmlns:forms="com.app.views.forms.*"
-		 title="Manage Roles">
+		 title="roleView_panel.title">
 	
 	<fx:Script>
 		<![CDATA[
 			import com.app.constants.Constants;
 			import com.app.models.presentations.RoleViewPresentationModel;
 			
-			
-			[Bindable]
 			[Inject]
+			[Bindable]
 			public var model:RoleViewPresentationModel;
 			
 		]]>
 	</fx:Script>
-	
+		
 	<!-- Role loading -->
 	<s:Label	id="roleView_label_loading"
-				text="Loading..."
+				text="roleView_label_loading.text"
 				visible="{model.roleModel.isRolesLoading}" />
 	
 	<!-- Role Grid -->
 	<grids:RoleGrid id="roleGrid"
-					visible="{!model.roleModel.isRolesLoading}" />
+					visible="{!model.roleModel.isRolesLoading}"
+					selectionChange="roleView_button_delete.visible = true; roleView_button_update.visible = true" />
 	
 	<!-- Role control bar -->
 	<s:controlBarContent>
-		<s:Spacer width="100%" />
 		
-		<s:Button	id="rolesView_button_demo"
-					label="Create demo role" 
-					enabled="{!model.roleModel.isRolesLoading}"
-					click="model.createDemoRole()" />
-		
-		<s:Button	id="rolesView_button_create"
-					label="Create new role"
+		<s:Button	id="roleView_button_create"
+					label="roleView_button_create.label"
 					enabled="{!model.roleModel.isRolesLoading}"
 					click="model.showRoleForm(this, Constants.STATE_CREATE)"/>
+
+		<s:Spacer width="100%" />
 		
-		<s:Button	id="rolesView_button_update"
-					label="Update role"
+		<s:Button	id="roleView_button_delete"
+					label="roleView_button_delete.label"
 					enabled="{!model.roleModel.isRolesLoading}"
+					visible="false"
+					click="model.showRoleForm(this, Constants.STATE_DELETE)"/>
+		
+		<s:Button	id="roleView_button_update"
+					label="roleView_button_update.label"
+					enabled="{!model.roleModel.isRolesLoading}"
+					visible="false"
 					click="model.showRoleForm(this, Constants.STATE_UPDATE)"/>
+		
+		<s:Button	id="roleView_button_delall"
+					label="roleView_button_delall.label"
+					enabled="{!model.roleModel.isRolesLoading}"
+					visible="{roleGrid.dataProvider.length >= 2}"
+					click="model.showRoleForm(this, Constants.STATE_DELALL)"/>
 		
 	</s:controlBarContent>
 	

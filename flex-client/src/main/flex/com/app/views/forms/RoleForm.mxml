@@ -2,43 +2,98 @@
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
-			   title.create="Create new role"
-			   title.update="Update existing role"
-			   close="model.closeWindow(this)">
+			   title.create="roleForm_titleWindow.title.create"
+			   title.delete="roleForm_titleWindow.title.delete"
+			   title.update="roleForm_titleWindow.title.update"
+			   title.delall="roleForm_titleWindow.title.delall"
+			   close="model.closeWindow(this)"
+			   mouseDownOutside="model.closeWindow(this)"
+			   creationComplete.create="focusManager.setFocus(roleForm_textInput_create)"
+			   creationComplete.update="focusManager.setFocus(roleForm_textInput_update)">
 	
 	<fx:Script>
 		<![CDATA[
 			import com.app.models.forms.RoleFormPresentationModel;
+			import com.app.views.RoleView;
 			
 			[Bindable]
+			public var roleView:RoleView;
+			
 			[Inject]
+			[Bindable]
 			public var model:RoleFormPresentationModel;
 		]]>
 	</fx:Script>
 	
 	<s:states>
-		<s:State name="default"/>
 		<s:State name="create"/>
+		<s:State name="delete"/>
 		<s:State name="update"/>
+		<s:State name="delall"/>
 	</s:states>
 	
-	<s:Form>
-		<s:FormHeading label.create="Give me the new role details:"
-					   label.update="Modify the role details"/>
-		<s:FormItem label="Name">
-			<s:TextInput text="@{model.roleModel.role.name}" />
+	<s:Form defaultButton="{roleForm_button_crud}" >
+		<s:FormHeading id="roleForm_formHeading"
+					   label.create="roleForm_formHeading.label.create"
+					   label.delete="roleForm_formHeading.label.delete"
+					   label.update="roleForm_formHeading.label.update"
+					   label.delall="roleForm_formHeading.label.delall"/>
+		
+		<s:FormItem id="roleForm_formItem_roleName"
+					label="roleForm_formItem_roleName.label" excludeFrom="delall">
+			<s:TextInput id="roleForm_textInput_create"
+						 text="@{model.roleModel.createdRole.name}"
+						 enabled.create="true"
+						 includeIn="create"/>
+			<s:TextInput text="@{model.roleModel.selectedRole.name}"
+						 enabled.delete="false"
+						 includeIn="delete"/>
+			<s:TextInput id="roleForm_textInput_update"
+						 text="@{model.roleModel.updatedRole.name}"
+						 enabled.update="true"
+						 includeIn="update"/>
 		</s:FormItem>
-		<s:FormItem label="Description">
-			<s:TextInput text="@{model.roleModel.role.description}" />
+		
+		<s:FormItem id="roleForm_formItem_roleDescription"
+					label="roleForm_formItem_roleDescription.label" excludeFrom="delall">
+			<s:TextInput text="@{model.roleModel.createdRole.description}"
+						 enabled.create="true"
+						 includeIn="create"/>
+			<s:TextInput text="@{model.roleModel.selectedRole.description}"
+						 enabled.delete="false"
+						 includeIn="delete"/>
+			<s:TextInput text="@{model.roleModel.updatedRole.description}"
+						 enabled.update="true"
+						 includeIn="update"/>
 		</s:FormItem>
 	</s:Form>
 	
 	<s:controlBarContent>
+		
+		<s:Button id="roleForm_button_crud"
+				  label.create="roleForm_button_crud.label.create"
+				  click.create="model.createRole();
+				  				roleView.roleView_button_delete.visible = false;
+				  				roleView.roleView_button_update.visible = false;"
+				  label.delete="roleForm_button_crud.label.delete"
+				  click.delete="model.deleteRole();
+				  				roleView.roleView_button_delete.visible = false;
+				  				roleView.roleView_button_update.visible = false;
+				  				model.closeWindow(this)"
+				  label.update="roleForm_button_crud.label.update"
+				  click.update="model.updateRole();
+				  				roleView.roleView_button_delete.visible = false;
+				  				roleView.roleView_button_update.visible = false;
+				  				model.closeWindow(this)"
+				  label.delall="roleForm_button_crud.label.delall"
+				  click.delall="model.deleteAllRoles();
+								roleView.roleView_button_delete.visible = false;
+				  				roleView.roleView_button_update.visible = false;
+								model.closeWindow(this);" />
 		<s:Spacer width="100%" />
-		<s:Button label.create="Add new role"
-				  click.create="model.createRole()"
-				  label.update="Update role"
-				  click.update="model.createRole()"/>
+		<s:Button id="roleForm_button_cancel"
+				  label="roleForm_button_cancel.label"
+				  click="model.closeWindow(this)"/>
 	</s:controlBarContent>
 	
 </s:TitleWindow>

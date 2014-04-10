@@ -2,6 +2,7 @@ package com.app.models.presentations
 {
 	import com.app.events.LoginEvent;
 	import com.app.models.LoginModel;
+	import com.app.views.LoginView;
 	import com.app.views.forms.LoginForm;
 	
 	import flash.display.DisplayObject;
@@ -15,7 +16,7 @@ package com.app.models.presentations
 	public class LoginViewPresentationModel implements ISwizAware
 	{
 		
-		[Dispatcher] public var dispatcher:IEventDispatcher;		// Dispatcher
+		[Dispatcher] public var dispatcher:IEventDispatcher;	// Dispatcher
 		
 		[Inject][Bindable] public var loginModel:LoginModel;	// Model
 		
@@ -42,7 +43,7 @@ package com.app.models.presentations
 		
 		public function createDemoLogin():void
 		{
-			dispatcher.dispatchEvent(new LoginEvent( LoginEvent.LOGINS_DEMO));
+			dispatcher.dispatchEvent(new LoginEvent( LoginEvent.DEMO));
 		}
 		
 		// *********************************************************
@@ -54,6 +55,7 @@ package com.app.models.presentations
 			// Create a modal LoginForm window.
 			var loginFormWindow:LoginForm = PopUpManager.createPopUp(obj, LoginForm, true) as LoginForm;
 			_swiz.registerWindow( loginFormWindow );
+			loginFormWindow.loginView = obj as LoginView;
 			loginFormWindow.currentState = state;
 			PopUpManager.centerPopUp(loginFormWindow);
 		}

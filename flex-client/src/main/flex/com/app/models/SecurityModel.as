@@ -7,6 +7,7 @@ package com.app.models
 		private var _login:Login;
 		private var _isLoginProgress:Boolean;
 		private var _isLogoutProgress:Boolean;
+		private var _isAuthenticationProgress:Boolean; // Login disabled while authentication is in progress
 		
 		public function SecurityModel()
 		{
@@ -17,6 +18,17 @@ package com.app.models
 		// Getters/Setters 
 		// *********************************************************
 		
+		[Bindable]
+		public function get isAuthenticationProgress():Boolean
+		{
+			return _isAuthenticationProgress;
+		}
+
+		public function set isAuthenticationProgress(value:Boolean):void
+		{
+			_isAuthenticationProgress = value;
+		}
+
 		[Bindable]
 		public function get isLoginProgress():Boolean
 		{

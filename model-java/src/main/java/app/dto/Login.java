@@ -3,6 +3,7 @@ package app.dto;
 import java.io.Serializable;
 import java.util.Collection;
 
+@SuppressWarnings("serial")
 public class Login implements Serializable {
  
 	private String key;
